@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowLeft, ChartNoAxesCombined, Coins, FlaskConical, Layers, Rocket, Wallet, Droplets } from "lucide-react";
+import { ArrowLeft, ChartNoAxesCombined, Coins, FlaskConical, Layers, Rocket, Wallet, Droplets, Trophy } from "lucide-react";
 const tabs = [
   { href: "/discover", name: "Discover", icon: ChartNoAxesCombined },
+  { href: "/quests", name: "Quests", icon: Trophy },
   { href: "/trade", name: "Spot", icon: Coins },
   { href: "/launch", name: "Token creator", icon: Rocket },
   { href: "/pools/create", name: "First pool", icon: Droplets },

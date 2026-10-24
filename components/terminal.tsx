@@ -153,8 +153,9 @@ export function Terminal() {
 
       <main className={"main-content layout-" + split}>
         <nav className="phase2-entry" aria-label="Phase 2 products">
-          <span>PHASE 2</span>
+          <span>BUILD</span>
           <a href="/discover">Discover <ArrowRight size={13}/></a>
+          <a href="/quests">On-chain Quests <ArrowRight size={13}/></a>
           <a href="/trade">Spot <ArrowRight size={13}/></a>
           <a href="/launch">Launch <ArrowRight size={13}/></a>
           <a href="/portfolio">Portfolio & LP <ArrowRight size={13}/></a>

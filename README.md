@@ -38,6 +38,18 @@ Next.js App Router, React, TypeScript, Lucide icons, custom responsive CSS. Zero
 
 **Not yet complete:** the persistent testnet itself, funding and faucet verification, external-wallet swap receipts, real externally verified pool-launch receipts, full historical trade-derived OHLC candles, full verified pricing/oracles and independent financial-contract audit.
 
+## Phase 3 (quest creation, funding and verification)
+
+- `/quests`: only chain-checked registered campaigns, with actual funded status and claim counts.
+- `/quests/create`: creator workflow with signed challenge, durable draft, EIP-712 attestor-bound on-chain campaign creation, chain registration, exact allowance and separate escrow-funding steps.
+- `/quests/[id]`: token-hold, token-specific swap and LP proof forms, wallet-signed eligibility request and wallet-bound on-chain claim execution.
+- `contracts/QuestEscrow.sol`: fixed-budget escrow, limited claims, typed proof signatures, replay prevention, expiry, controlled pause/signing-key rotation and post-expiry refund.
+- `db/migrations/013_quests.sql`: dedicated quest database migration; the schema has **not** been applied unless separately verified.
+- `/api/quests/challenge`, `/api/quests/drafts`, `/api/quests/register`, `/api/quests/attest`: server-issued wallet challenges and conditional proof attestation.
+- Verified on-chain funding and task evidence gate *all* live UI states and signatures.
+
+**Operational status:** requires separate Neon configuration, a persistent valueless chain, code-hash pinned QuestEscrow and a securely controlled test-only attestor. See [Phase 3 release notes](docs/PHASE-03.md).
+
 ## Roadmap
 
 See [MILESTONES.md](MILESTONES.md) for 20 milestone phases, sub-tasks, release gates and acceptance tests.

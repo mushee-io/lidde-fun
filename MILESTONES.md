@@ -14,7 +14,11 @@
 - M07: **guarded capped sandbox ERC-20 creator, creator-bound first-pool launch with initial price acknowledgement and exact approvals implemented**; creator deployment and external-wallet test receipts remain pending.
 - M08: **wallet-signed token-token sandbox swap code with exact approvals and source checks implemented**; no public testnet exists yet and real end-to-end receipts have not been demonstrated.
 - M09: **indexed balance, LP holdings and existing-pool add/full-withdraw transaction source implemented**; unverified sandbox remains disabled and comprehensive external-wallet acceptance tests pending.
-- M10–M20: **planned, not built or deployed** unless individually verified by commits, test reports and real receipts.
+- M10: **signed durable quest drafts, step rules and creator interface implemented**; dedicated database provisioning/migration and browser acceptance tests pending.
+- M11: **non-upgradeable EIP-712 QuestEscrow, vault registration, escrow funding and expiry-refunds implemented in source**; sandbox contract deployment and independent audits pending.
+- M12: **multi-task hold, LP and swap evidence-verification implemented**; proof-provider attestation security review, abuse stress tests and public receipts pending.
+- M13: **typed-wallet claim authorization, duplicate claim prevention and on-chain claim UI built**; live settlement verification and anti-Sybil effectiveness review pending.
+- M14–M20: **planned, not built or deployed** unless individually verified by commits, test reports and real receipts.
 - The Lidde DEX repository currently has a planned isolated EVM test network. Its network registry is not configured; it must not be called a working public testnet.
 - The VERY live network is not to be relabelled as a sandbox. No mainnet trade, reward, wallet-signer, lending or leverage transaction is enabled by the first Lidde Fun commit.
 - The existing UI token numbers are fabricated placeholders marked as demo; local quest drafts are stored in localStorage, with no public campaign, token emission, identity verification or reward claim.
