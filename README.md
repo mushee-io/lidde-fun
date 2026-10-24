@@ -4,7 +4,7 @@ A VERY ecosystem trading-discovery and quests terminal, inspired by the **layout
 
 ## Status
 
-**M01 preview + initial M02–M05 foundation committed.** The sidebar token rows are explicitly sample data, but a separate `/markets` page now checks for canonical indexed testnet pools; `/network` independently validates configured sandbox chain identity. Quests are local drafts and not live reward programs. Wallet connection is account read-only. Swaps, deposits, perps, leaderboards, and rewards are not live. No testnet chain is presented as provisioned until deployment is independently verified.
+**Phase 1–4 source implementation committed; genuine public sandbox remains unconfigured.** The original home terminal still includes clearly labelled preview fixtures, while route-specific Phase 2/3/4 modules fail closed when the verified chain, indexer and escrow are unavailable. No real-money trading, rewards, perps, automated execution or verified public beta is active. The Phase 3/4 SQL tables have been created on the separate Neon `lidde-fun-quests` database, but this is not a live application deployment.
 
 ## Development
 
@@ -15,7 +15,7 @@ A VERY ecosystem trading-discovery and quests terminal, inspired by the **layout
 
 ## Stack
 
-Next.js App Router, React, TypeScript, Lucide icons, custom responsive CSS. Zero wallet private keys, no server-side signers or fake on-chain activities.
+Next.js App Router, React, TypeScript, Viem, Neon PostgreSQL, Lucide icons, custom responsive CSS. Phase 3 adds a **server-side test-only EIP-712 attestor** which is disabled without secure environment credentials; browser wallet transactions remain noncustodial.
 
 ## Initial M02–M05 engineering pass
 
@@ -44,11 +44,22 @@ Next.js App Router, React, TypeScript, Lucide icons, custom responsive CSS. Zero
 - `/quests/create`: creator workflow with signed challenge, durable draft, EIP-712 attestor-bound on-chain campaign creation, chain registration, exact allowance and separate escrow-funding steps.
 - `/quests/[id]`: token-hold, token-specific swap and LP proof forms, wallet-signed eligibility request and wallet-bound on-chain claim execution.
 - `contracts/QuestEscrow.sol`: fixed-budget escrow, limited claims, typed proof signatures, replay prevention, expiry, controlled pause/signing-key rotation and post-expiry refund.
-- `db/migrations/013_quests.sql`: dedicated quest database migration; the schema has **not** been applied unless separately verified.
+- `db/migrations/013_quests.sql`: dedicated quest database migration; applied and table inventory verified in the separate Neon `lidde-fun-quests` project.
 - `/api/quests/challenge`, `/api/quests/drafts`, `/api/quests/register`, `/api/quests/attest`: server-issued wallet challenges and conditional proof attestation.
 - Verified on-chain funding and task evidence gate *all* live UI states and signatures.
 
 **Operational status:** requires separate Neon configuration, a persistent valueless chain, code-hash pinned QuestEscrow and a securely controlled test-only attestor. See [Phase 3 release notes](docs/PHASE-03.md).
+
+## Phase 4 (XP, community, alerts and trading research)
+
+- `/leaderboard`: week/month/season/all-time deterministic, **opt-in** ranking, only backed by canonically verified QuestEscrow `RewardClaimed` events (100 nonfinancial XP per unique campaign claim). Single-use wallet authorization, no trade-volume points, score replay check.
+- `/community`: referral codes and QR links created only for publicly opted-in profiles. Wallets explicitly consent to referral attribution; link clicks or referral registrations **never** grant XP or tokens. Creator quest-sharing uses the verified campaign directory, not fictitious advertisements.
+- `/alerts`: up to 20 wallet-private on-chain watch rules, on-demand threshold/new-pair checks against indexed data, deduplicated stored observations, export and erase controls. **No push, Telegram, email or scheduled cron exists.**
+- `/lab`: read-only indexed constant-product AMM quote simulation, bounded budgets and slippage sensitivity. Requires acknowledgement before navigating to the separately verified spot terminal; **no delegated/copy/automated trading**.
+- `db/migrations/014_growth.sql`: applied to separate Neon `lidde-fun-quests`; five growth tables verified.
+- See [Phase 4 release notes and gates](docs/PHASE-04.md).
+
+No Phase 4 feature is labelled as an active production reward program or verified trading performance until a persistent sandbox and independent wallet receipts are available.
 
 ## Roadmap
 

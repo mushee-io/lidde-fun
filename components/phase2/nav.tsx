@@ -1,8 +1,12 @@
 import Link from "next/link";
-import { ArrowLeft, ChartNoAxesCombined, Coins, FlaskConical, Layers, Rocket, Wallet, Droplets, Trophy } from "lucide-react";
+import { ArrowLeft, ChartNoAxesCombined, Coins, FlaskConical, Layers, Rocket, Wallet, Droplets, Trophy, Share2, Bell, FlaskRound } from "lucide-react";
 const tabs = [
   { href: "/discover", name: "Discover", icon: ChartNoAxesCombined },
   { href: "/quests", name: "Quests", icon: Trophy },
+  { href: "/leaderboard", name: "XP", icon: Trophy },
+  { href: "/community", name: "Community", icon: Share2 },
+  { href: "/alerts", name: "Alerts", icon: Bell },
+  { href: "/lab", name: "Trading lab", icon: FlaskRound },
   { href: "/trade", name: "Spot", icon: Coins },
   { href: "/launch", name: "Token creator", icon: Rocket },
   { href: "/pools/create", name: "First pool", icon: Droplets },
@@ -11,7 +15,7 @@ const tabs = [
   { href: "/network", name: "Network", icon: FlaskConical }
 ];
 export function Phase2Nav() {
-  return <nav className="phase2-nav" aria-label="Lidde Fun phase two">
+  return <nav className="phase2-nav" aria-label="Lidde Fun product navigation">
     <Link href="/" className="back"><ArrowLeft size={16}/> Lidde Fun</Link>
     {tabs.map(t => <Link href={t.href} key={t.href}><t.icon size={16}/>{t.name}</Link>)}
   </nav>;

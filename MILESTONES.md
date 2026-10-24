@@ -18,7 +18,11 @@
 - M11: **non-upgradeable EIP-712 QuestEscrow, vault registration, escrow funding and expiry-refunds implemented in source**; sandbox contract deployment and independent audits pending.
 - M12: **multi-task hold, LP and swap evidence-verification implemented**; proof-provider attestation security review, abuse stress tests and public receipts pending.
 - M13: **typed-wallet claim authorization, duplicate claim prevention and on-chain claim UI built**; live settlement verification and anti-Sybil effectiveness review pending.
-- M14–M20: **planned, not built or deployed** unless individually verified by commits, test reports and real receipts.
+- M14: **canonical QuestEscrow-claim XP ingestion, deterministic UTC rankings and signed opt-in profiles implemented**; rankings are empty or unavailable until the public indexed sandbox is configured, and unique-person Sybil control is not established.
+- M15: **shareable quest pages, opt-in wallet referral attribution, QR onboarding and recorded eligible-claim conversion implemented**; social OAuth integrations, partner moderation and paid acquisition pipelines are not connected.
+- M16: **wallet-scoped watchlists, bounded canonical pair-price/new-pair evaluation, deduped observations, export and deletion implemented**; scheduled workers, push/email/Telegram delivery and reorg reconciliation of historical alerts remain outstanding.
+- M17: **read-only guarded trade lab with verified pool reserve simulation, slippage/budget controls and explicit spot handoff implemented**; copy trading, delegated accounts, automation and live funds deliberately disabled.
+- M18–M20: **planned or separately gated**; do not claim a live launch without independent proof.
 - The Lidde DEX repository currently has a planned isolated EVM test network. Its network registry is not configured; it must not be called a working public testnet.
 - The VERY live network is not to be relabelled as a sandbox. No mainnet trade, reward, wallet-signer, lending or leverage transaction is enabled by the first Lidde Fun commit.
 - The existing UI token numbers are fabricated placeholders marked as demo; local quest drafts are stored in localStorage, with no public campaign, token emission, identity verification or reward claim.

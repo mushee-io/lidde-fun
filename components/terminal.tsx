@@ -156,6 +156,10 @@ export function Terminal() {
           <span>BUILD</span>
           <a href="/discover">Discover <ArrowRight size={13}/></a>
           <a href="/quests">On-chain Quests <ArrowRight size={13}/></a>
+          <a href="/leaderboard">Verified XP <ArrowRight size={13}/></a>
+          <a href="/community">Community <ArrowRight size={13}/></a>
+          <a href="/alerts">Alerts <ArrowRight size={13}/></a>
+          <a href="/lab">Trade Lab <ArrowRight size={13}/></a>
           <a href="/trade">Spot <ArrowRight size={13}/></a>
           <a href="/launch">Launch <ArrowRight size={13}/></a>
           <a href="/portfolio">Portfolio & LP <ArrowRight size={13}/></a>
