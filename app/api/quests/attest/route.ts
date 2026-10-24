@@ -4,7 +4,8 @@ import { keccak256, toHex } from "viem";
 import { authorizedQuest, checkOrigin } from "@/lib/quests/auth";
 import { questRecord } from "@/lib/quests/records";
 import { questSql } from "@/lib/quests/db";
-import { claimSigner, deployedCampaign, questTypedData, typedDomain, vaultAbi } from "@/lib/quests/vault";
+import { claimSigner, deployedCampaign, questTypedData, typedDomain } from "@/lib/quests/vault";
+import { vaultAbi } from "@/lib/quests/vault-abi";
 import { normalizedWallet, isUuid, type QuestRule } from "@/lib/quests/rules";
 import { verifyTasks } from "@/lib/quests/proofs";
 
