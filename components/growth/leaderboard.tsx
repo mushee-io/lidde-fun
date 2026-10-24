@@ -72,7 +72,7 @@ export function Leaderboard(){
      <button className="growth-primary" onClick={()=>void account("read")} disabled={busy}><Wallet size={15}/>{wallet?addr(wallet):"Connect & view profile"}</button>
      <label>Public nickname<input value={nickname} onChange={e=>setNickname(e.target.value)} placeholder="Optional nickname" maxLength={24}/></label>
      <label className="growth-checkbox"><input type="checkbox" checked={publicOptin} onChange={e=>setPublicOptin(e.target.checked)}/> Include my wallet on the public XP board</label>
-     <div className="growth-actions"><button disabled={busy||!wallet} onClick={()=>void account("save")}>Save profile</button><button disabled={busy||!wallet} onClick={()=>{if(window.confirm("Delete off-chain profile, XP and referral records? Blockchain transactions cannot be deleted."))void account("delete");}}>Delete my data</button></div>
+     <div className="growth-actions"><button disabled={busy||!wallet} onClick={()=>void account("save")}>Save profile</button><button disabled={busy||!wallet} onClick={()=>{if(globalThis.confirm("Delete off-chain profile, XP and referral records? Blockchain transactions cannot be deleted."))void account("delete");}}>Delete my data</button></div>
      {profile&&<p className="growth-note">Referral code: {profile.referralCode} · <a href="/community">Community links <ExternalLink size={12}/></a></p>}
     </section>
     <section className="growth-panel growth-form"><h2><CheckCircle2 size={18}/> Import verified claim</h2>
