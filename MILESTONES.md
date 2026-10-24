@@ -10,7 +10,11 @@
 - M03: **read-only pinned testnet identity and contract-bytecode checks implemented**; the isolated network remains unconfigured, undeployed and unverified.
 - M04: **wallet account/chain event handling and a read-only connection panel implemented**; secure creator sessions, data controls and multiwallet support remain.
 - M05: **schema-gated canonical Lidde DEX indexer reader and verified pool viewer implemented**; standalone persistent market indexing and live sources remain unconfigured.
-- M06–M20: **planned, not built or deployed** unless individually verified by commits, test reports and real receipts.
+- M06: **read-only on-chain token/pool discovery implemented**; production-grade trending, canonical USD pricing, history and chart indexing are pending.
+- M07: **guarded capped sandbox ERC-20 creator wired to actual contract ABI**; creator deployment not configured, independent usage receipts and initial pool creation pending.
+- M08: **wallet-signed token-token sandbox swap code with exact approvals and source checks implemented**; no public testnet exists yet and real end-to-end receipts have not been demonstrated.
+- M09: **indexed balance, LP holdings and existing-pool add/full-withdraw transaction source implemented**; unverified sandbox remains disabled and comprehensive external-wallet acceptance tests pending.
+- M10–M20: **planned, not built or deployed** unless individually verified by commits, test reports and real receipts.
 - The Lidde DEX repository currently has a planned isolated EVM test network. Its network registry is not configured; it must not be called a working public testnet.
 - The VERY live network is not to be relabelled as a sandbox. No mainnet trade, reward, wallet-signer, lending or leverage transaction is enabled by the first Lidde Fun commit.
 - The existing UI token numbers are fabricated placeholders marked as demo; local quest drafts are stored in localStorage, with no public campaign, token emission, identity verification or reward claim.

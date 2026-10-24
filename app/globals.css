@@ -211,3 +211,83 @@ a{color:inherit;text-decoration:none}.app{padding-bottom:46px;min-height:100vh}.
 @media(max-width:1130px){.markets-link{display:none}}
 @media(max-width:750px){.market-route{padding:19px 12px 75px}.market-route-heading,.health-title{flex-direction:column;align-items:flex-start;padding:32px 0 18px}.market-metrics,.health-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.market-empty{padding:35px 20px}.wallet-panel{right:-10px}}
 @media(max-width:410px){.market-metrics,.health-grid{grid-template-columns:1fr}.wallet-panel{right:-13px;width:95vw}}
+
+
+/* Phase 2 — new product workspaces */
+.phase2-page{max-width:1500px;margin:0 auto;padding:0 25px 100px;min-height:100vh}
+.phase2-nav{padding:22px 0;display:flex;align-items:center;gap:9px;flex-wrap:wrap;border-bottom:1px solid #302b3f}
+.phase2-nav a{display:inline-flex;align-items:center;gap:8px;color:#b8b2c5;border:1px solid #332d44;border-radius:10px;padding:11px 14px;background:#151221;font-size:12px;font-weight:750}
+.phase2-nav a:hover{color:#fff;background:#292341;border-color:#554a74}
+.phase2-nav a.back{color:#afa7ff;background:#211b35;margin-right:auto}
+.phase2-heading{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:57px 0 32px}
+.phase2-heading small{letter-spacing:.12em;font-size:11px;font-weight:800;color:#a69aff}
+.phase2-heading h1{font-size:clamp(36px,5.3vw,64px);line-height:1.1;letter-spacing:-.05em;margin:13px 0 9px}
+.phase2-heading p{color:#aea6bc;font-size:14px;line-height:1.7;max-width:740px}
+.phase2-heading>span{color:#c0afd5;font-size:10px;font-weight:750;border:1px solid #51415a;background:#2b1b31;padding:9px 13px;border-radius:8px;white-space:nowrap}
+.phase2-panel{background:#14111f;border:1px solid #363044;border-radius:18px;padding:25px;min-width:0}
+.phase2-panel h2{font-size:21px;letter-spacing:-.6px;margin:0 0 13px;display:flex;align-items:center;gap:10px}
+.phase2-panel h2 svg{color:#a89eff}
+.phase2-panel>p,.phase2-form>p{color:#aaa2b5;font-size:13px;line-height:1.8}
+.phase2-panel-head{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-bottom:20px}
+.phase2-panel-head p{font-size:12px;color:#aba1b6;line-height:1.7}
+.phase2-panel-head button{display:inline-flex;align-items:center;gap:7px;background:#2a2542;border:1px solid #585077;border-radius:9px;padding:11px 15px;font-size:12px}
+.phase2-controls{display:flex;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap}
+.phase2-search{display:flex;align-items:center;gap:10px;color:#9c92ae;background:#0d0a17;border:1px solid #383049;border-radius:10px;padding:0 14px;flex:1;min-width:200px}
+.phase2-search input{color:white;background:transparent;outline:0;border:0;height:44px;min-width:0;flex:1;font-size:12px}
+.phase2-controls select,.phase2-form select,.phase2-form input{color:#efebf4;background:#100d19;border:1px solid #3c344f;border-radius:10px;padding:12px 14px;min-width:0}
+.phase2-controls select{height:45px;font-size:12px}
+.phase2-blocked{background:#231b2b;border:1px solid #51415a;border-radius:14px;padding:25px;color:#cdbbd1;display:flex;flex-direction:column;align-items:flex-start;gap:8px;font-size:13px}
+.phase2-blocked svg{color:#d6a0bb}
+.phase2-blocked strong{font-size:16px}
+.phase2-blocked p{color:#baacc0;line-height:1.6;margin:5px 0}
+.phase2-blocked a{color:#afa7ff;display:flex;align-items:center;gap:6px;font-weight:700}
+.phase2-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:0 0 20px}
+.phase2-stats>div{background:#1d182c;border:1px solid #352b47;border-radius:11px;padding:15px;display:grid;gap:10px}
+.phase2-stats small{color:#9f97af;font-size:10px}
+.phase2-stats strong{font-size:17px;overflow-wrap:anywhere}
+.phase2-muted{color:#9990aa!important;font-size:12px!important;line-height:1.8!important}
+.phase2-table-scroll{overflow-x:auto;border:1px solid #332b44;border-radius:12px}
+.phase2-table{border-collapse:collapse;width:100%;min-width:830px;font-size:12px}
+.phase2-table th{color:#928ba2;text-align:left;font-size:11px;padding:14px 16px;background:#1b1728}
+.phase2-table td{border-top:1px solid #2b2539;text-align:left;padding:16px}
+.phase2-table td strong{display:block;font-size:13px;margin-bottom:5px}
+.phase2-table td small{display:block;color:#a098b0;font-size:10px;overflow-wrap:anywhere}
+.phase2-table a{display:inline-flex;align-items:center;gap:5px;color:#b6acff;font-weight:750}
+.phase2-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.82fr);gap:18px;align-items:start}
+.phase2-form{display:flex;flex-direction:column;gap:13px}
+.phase2-form>h2{margin-bottom:1px}
+.phase2-form label{display:grid;gap:8px;color:#cbc4d5;font-size:12px;font-weight:650}
+.phase2-form label input,.phase2-form label select{width:100%;font-size:13px}
+.phase2-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.phase2-fields label:nth-child(1):last-child{grid-column:1/-1}
+.phase2-primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px 17px;background:#736bff;color:white;font-weight:800;border:0;border-radius:11px}
+.phase2-primary:hover:not(:disabled){background:#8b82ff}
+.phase2-primary:disabled{opacity:.42;cursor:not-allowed}
+.phase2-warning{border:1px solid #5b405a;border-radius:12px;padding:14px 15px;background:#28202c;color:#d2b8ce;font-size:12px;line-height:1.7;display:flex;gap:9px;align-items:flex-start}
+.phase2-warning svg{color:#e8a4ca;flex-shrink:0}
+.phase2-success{border:1px solid #34644f;background:#1d342b;color:#acf2d0;padding:13px;border-radius:9px;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.phase2-error{border:1px solid #7c3a4d;background:#3b202b;color:#ffbccb;padding:13px;border-radius:9px;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.phase2-result,.phase2-quote{background:#211a32;border:1px solid #4e416c;border-radius:12px;padding:19px;display:grid;gap:12px;overflow-wrap:anywhere}
+.phase2-result small,.phase2-quote small{font-size:11px;color:#b4a9cc}
+.phase2-result code{font-size:13px;overflow-wrap:anywhere}
+.phase2-quote strong{font-size:20px;line-height:1.5}
+.phase2-quote div{font-size:12px;color:#b1a8c2}
+.phase2-text-link{display:inline-flex;align-items:center;gap:8px;color:#ada3ff;font-weight:800;font-size:12px}
+.phase2-swap-pair{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;background:#1e192e;border:1px solid #38304c;border-radius:11px}
+.phase2-swap-pair button{background:#393158;color:#c5bcff;border:1px solid #514675;border-radius:8px;padding:9px 11px;display:flex;gap:7px;align-items:center;font-size:11px}
+.phase2-swap-pair span{font-size:12px;font-weight:750;min-width:0}
+.phase2-balances{border:1px solid #332b43;border-radius:11px;overflow:hidden}
+.phase2-balances>div{display:flex;justify-content:space-between;gap:10px;padding:13px;border-bottom:1px solid #302a41;font-size:12px;overflow-wrap:anywhere}
+.phase2-balances>div:last-child{border-bottom:none}
+.phase2-balances p{padding:10px 13px;color:#a89fb6;font-size:12px}
+.phase2-balances span{color:#aba4c4;text-align:right}
+.phase2-switch{display:flex;gap:9px}
+.phase2-switch button{background:#252037;border:1px solid #403851;border-radius:9px;padding:10px 12px;font-size:12px;flex:1}
+.phase2-switch button.active{background:#42386e;color:#fff;border-color:#7566a2}
+.phase2-entry{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 18px;border:1px solid #3c3352;border-radius:12px;padding:11px 12px;background:#191529}
+.phase2-entry>span{font-size:10px;font-weight:800;letter-spacing:.05em;color:#a49bca;padding:0 6px}
+.phase2-entry>a{display:inline-flex;gap:5px;align-items:center;padding:8px 11px;color:#c7bbff;font-size:11px;border:1px solid #403657;border-radius:8px}
+.phase2-entry>a:hover{background:#332848}
+@media(max-width:1030px){.phase2-grid{grid-template-columns:1fr}.phase2-heading{flex-wrap:wrap}.phase2-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.phase2-page{padding:0 12px 80px}.phase2-nav{gap:6px}.phase2-nav a{padding:9px;font-size:11px}.phase2-heading{padding:32px 0 21px}.phase2-panel{padding:16px}.phase2-panel-head{align-items:flex-start;flex-direction:column}.phase2-controls{flex-direction:column;align-items:stretch}.phase2-stats{grid-template-columns:1fr 1fr}.phase2-fields{grid-template-columns:1fr}.phase2-form{gap:11px}.phase2-heading>span{white-space:normal}.phase2-swap-pair{flex-wrap:wrap}}
+@media(max-width:400px){.phase2-stats{grid-template-columns:1fr}}

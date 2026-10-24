@@ -152,6 +152,13 @@ export function Terminal() {
       </aside>
 
       <main className={"main-content layout-" + split}>
+        <nav className="phase2-entry" aria-label="Phase 2 products">
+          <span>PHASE 2</span>
+          <a href="/discover">Discover <ArrowRight size={13}/></a>
+          <a href="/trade">Spot <ArrowRight size={13}/></a>
+          <a href="/launch">Launch <ArrowRight size={13}/></a>
+          <a href="/portfolio">Portfolio & LP <ArrowRight size={13}/></a>
+        </nav>
         <div className="page-title">
           <div><div className="page-title-line">
             {tab === "Quests" ? <Trophy/> : tab === "Tokens" ? <Flame/> : tab === "Perp" ? <Activity/> : tab === "Leaderboard" ? <Trophy/> : <Bell/>}

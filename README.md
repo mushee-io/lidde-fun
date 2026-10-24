@@ -25,6 +25,18 @@ Next.js App Router, React, TypeScript, Lucide icons, custom responsive CSS. Zero
 - [Implementation handover](docs/M02-M05-IMPLEMENTATION.md) and [unit tests](tests/infra-validation.test.ts).
 - GitHub Actions now runs tests, typecheck, and production build.
 
+## Phase 2 implementation (M05–M09)
+
+- `/discover`: real indexed ERC-20 metadata, pair authenticity, swap counts and token-to-token pool ratios. No false USD price or fabricated market cap.
+- `/trade`: direct token-token Lidde Router swap quotes, precise allowance approval and real receipts, only when the chain and code fingerprints are verified.
+- `/launch`: capped test token creation through an independently pinned Lidde demo creator, with issuer-control disclosure and on-chain event parsing.
+- `/portfolio`: canonical indexed token balances and LP ownership, real ERC-20 add liquidity and full redeemable LP withdrawal flows for **existing** indexed pools.
+- `/api/phase2/manifest`: server-attested public safe network and contract manifest. This is not a statement that a public chain is already deployed.
+- `/api/discovery` and `/api/portfolio`: source-checked read-only endpoints gated by the canonical indexed block and Lidde DEX market indexer.
+- Read the [Phase 2 implementation notes](docs/PHASE-02.md) before entering testnet configuration.
+
+**Not yet complete:** the persistent testnet itself, funding and faucet verification, external-wallet swap receipts, first-pool launch for newly created tokens, real historical candles, full verified pricing/oracles and independent financial-contract audit.
+
 ## Roadmap
 
 See [MILESTONES.md](MILESTONES.md) for 20 milestone phases, sub-tasks, release gates and acceptance tests.
