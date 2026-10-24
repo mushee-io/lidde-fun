@@ -24,7 +24,7 @@ export async function connectedAddress():Promise<Address>{
  if(typeof first!=="string"||!isAddress(first))throw new Error("Wallet has not returned an EVM account.");
  return getAddress(first);
 }
-export async function signedQuestChallenge(wallet:Address,action:"create-draft"|"register-campaign"|"verify-quest"){
+export async function signedQuestChallenge(wallet:Address,action:"create-draft"|"register-campaign"|"verify-quest"|"growth-claim"|"growth-account"|"growth-referral"|"growth-watch"){
  const challenge=await parseApi<{id:string;message:string}>(
   "/api/quests/challenge?wallet="+wallet+"&action="+action);
  const signed=await browserProvider().request({
