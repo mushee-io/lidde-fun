@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { WalletConnect } from "@/components/wallet-connect";
 import {
   Activity, ArrowRight, ArrowUpRight, Bell, Check, Clock3, Coins, Copy,
   ExternalLink, Flame, Gift, Info, LayoutGrid, Menu, Plus, Search,
@@ -40,33 +41,6 @@ function Avatar({ text, tone = "purple" }: { text: string; tone?: string }) {
   return <span className={"avatar " + tone}>{text}</span>;
 }
 
-function WalletConnect({ notify }: { notify: (message: string) => void }) {
-  const [address, setAddress] = useState("");
-  const [busy, setBusy] = useState(false);
-  async function connect() {
-    if (address) {
-      try { await navigator.clipboard.writeText(address); notify("Wallet address copied."); }
-      catch { notify("Connected wallet: " + address); }
-      return;
-    }
-    const injected = (window as Window & { ethereum?: { request: (args: { method: string }) => Promise<unknown> } }).ethereum;
-    if (!injected) return notify("No browser EVM wallet found. Install an EVM wallet to connect your address.");
-    setBusy(true);
-    try {
-      const result = await injected.request({ method: "eth_requestAccounts" });
-      const account = Array.isArray(result) && typeof result[0] === "string" ? result[0] : "";
-      if (!account) throw new Error("The wallet returned no account.");
-      setAddress(account);
-      notify("Wallet connected for UI preview. No transactions or approvals were requested.");
-    } catch (error) {
-      notify(error instanceof Error ? error.message : "Wallet connection was unsuccessful.");
-    } finally { setBusy(false); }
-  }
-  return <button className={"connect " + (address ? "wallet-connected" : "")} onClick={connect} disabled={busy}>
-    {address ? <><Wallet size={15}/>{address.slice(0, 6)}…{address.slice(-4)}<Copy size={12}/></> : busy ? "Connecting…" : "Connect"}
-  </button>;
-}
-
 export function Terminal() {
   const [tab, setTab] = useState<Tab>("Quests");
   const [filter, setFilter] = useState<TokenFilter>("Trending");
@@ -81,6 +55,7 @@ export function Terminal() {
   const [draftSymbol, setDraftSymbol] = useState("tFUN");
   const [draftTask, setDraftTask] = useState<Task>("Hold");
   const [selectedToken, setSelectedToken] = useState<Token | null>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     try {
@@ -92,6 +67,23 @@ export function Terminal() {
       ).slice(0, 30));
     } catch { /* local browser storage may be disabled */ }
   }, []);
+
+  useEffect(() => {
+    function shortcut(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        if (create) { setCreate(false); e.preventDefault(); }
+        else if (document.activeElement === searchRef.current) searchRef.current?.blur();
+      }
+      const focusTarget = e.target as HTMLElement | null;
+      const editing = !!focusTarget && (focusTarget.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(focusTarget.tagName));
+      if (e.key === "/" && !editing && !create) {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    }
+    window.addEventListener("keydown", shortcut);
+    return () => window.removeEventListener("keydown", shortcut);
+  }, [create]);
 
   const normalized = search.toLowerCase().trim();
   const visibleTokens = useMemo(() => tokens.filter(t => t.tags.includes(filter) && (t.symbol + " " + t.label).toLowerCase().includes(normalized)), [filter, normalized]);
@@ -131,10 +123,10 @@ export function Terminal() {
         <button className="mobile-toggle" aria-label="Open sidebar" onClick={() => setMobileMenu(!mobileMenu)}><Menu size={21}/></button>
         <a className="brand" href="/"><span className="brand-symbol">↭</span><span>Lidde<span>Fun</span></span></a>
       </div>
-      <label className="searchbox"><Search size={19}/><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search for tokens, quests or creators..." aria-label="Search tokens and quests"/><kbd>/</kbd></label>
+      <label className="searchbox"><Search size={19}/><input ref={searchRef} value={search} onChange={e => setSearch(e.target.value)} placeholder="Search for tokens, quests or creators..." aria-label="Search tokens and quests"/><kbd>/</kbd></label>
       <div className="top-actions">
-        <span className="preview-pill">● UI PREVIEW</span>
-        <a className="network" href="https://github.com/mushee-io/lidde-dex" target="_blank" rel="noreferrer"><small>Network</small><strong>VERY ecosystem <ExternalLink size={12}/></strong></a>
+        <a className="markets-link" href="/markets">Markets <ArrowUpRight size={14}/></a><span className="preview-pill">● UI PREVIEW</span>
+        <a className="network" href="/network"><small>Network</small><strong>Check status <ExternalLink size={12}/></strong></a>
         <button className="portfolio" onClick={() => setNotice("Portfolio indexer and balances are not yet connected.")}><small>—</small><span>Portfolio</span></button>
         <WalletConnect notify={setNotice}/>
       </div>
@@ -155,8 +147,8 @@ export function Terminal() {
             <span className="token-stats"><strong>{"$"}{t.cap}<small> MC</small></strong><small className={t.change >= 0 ? "up" : "down"}>{t.change >= 0 ? "▲" : "▼"} {Math.abs(t.change).toFixed(2)}%</small></span>
           </button>) : <p className="empty-small">No sample tokens found.</p>}
         </div>
-        <div className="sidebar-actions"><button className={split === "bottom" ? "chosen" : ""} onClick={() => setSplit(split === "bottom" ? "normal" : "bottom")}><LayoutGrid size={15}/> Split bottom</button>
-          <button className={split === "right" ? "chosen" : ""} onClick={() => setSplit(split === "right" ? "normal" : "right")}><Activity size={15}/> Split right</button></div>
+        <div className="sidebar-actions"><button className={split === "bottom" ? "chosen" : ""} onClick={() => setSplit(split === "bottom" ? "normal" : "bottom")}><LayoutGrid size={15}/> Wide grid</button>
+          <button className={split === "right" ? "chosen" : ""} onClick={() => setSplit(split === "right" ? "normal" : "right")}><Activity size={15}/> Compact grid</button></div>
       </aside>
 
       <main className={"main-content layout-" + split}>
@@ -194,6 +186,7 @@ export function Terminal() {
 
         {tab === "Tokens" && <section>
           <p className="disclaimer"><Info size={15}/> Every number below is fabricated UI sample data — not an actual trading price or market valuation.</p>
+          <a href="/markets" className="verified-market-link"><ShieldCheck size={16}/> Open the verified testnet market board <ArrowUpRight size={16}/></a>
           {selectedToken && <div className="selected-token"><Avatar text={selectedToken.avatar} tone={selectedToken.color}/><div><small>SELECTED SAMPLE TOKEN</small><h2>{selectedToken.symbol}</h2><p>{selectedToken.label}</p></div><div className="price-selected"><strong>{"$"}{selectedToken.price}</strong><span className={selectedToken.change >= 0 ? "up" : "down"}>{selectedToken.change.toFixed(2)}% mock</span></div></div>}
           <div className="table-container"><table><thead><tr><th>Token</th><th>Mock price</th><th>Mock cap</th><th>Mock 24h</th><th>Action</th></tr></thead><tbody>{visibleTokens.map(t => <tr key={t.symbol}>
             <td><div className="table-token"><Avatar text={t.avatar} tone={t.color}/><span><strong>{t.symbol}</strong><small>{t.label}</small></span></div></td>
@@ -219,7 +212,7 @@ export function Terminal() {
         <div className="modal-head"><div><span className="eyebrow">LOCAL UI PREVIEW</span><h2 id="create-title">Create a quest draft</h2></div><button aria-label="Close" onClick={() => setCreate(false)}><X size={20}/></button></div>
         <p>This saves a draft to your browser, not a funded campaign. No wallet signature is required.</p>
         <form onSubmit={saveDraft}>
-          <label>Quest name<input required minLength={5} maxLength={90} placeholder="e.g. Explore Lidde pools" value={draftTitle} onChange={e => setDraftTitle(e.target.value)}/></label>
+          <label>Quest name<input autoFocus required minLength={5} maxLength={90} placeholder="e.g. Explore Lidde pools" value={draftTitle} onChange={e => setDraftTitle(e.target.value)}/></label>
           <div className="form-two"><label>Illustrative reward<input type="number" required min="1" max="1000000000" step="1" placeholder="20000" value={draftReward} onChange={e => setDraftReward(e.target.value)}/></label>
             <label>Demo token<select value={draftSymbol} onChange={e => setDraftSymbol(e.target.value)}><option value="tFUN">tFUN</option><option value="tLIDD">tLIDD</option><option value="tVERY">tVERY</option></select></label></div>
           <label>Sample task<select value={draftTask} onChange={e => setDraftTask(e.target.value as Task)}>{taskOptions.map(t => <option key={t} value={t}>{t}</option>)}</select></label>
