@@ -178,7 +178,7 @@ contract QuestEscrowTest {
         vault.pause(id,false);
         vm.expectRevert(QuestEscrow.InvalidSignature.selector);
         vm.prank(alice);
-        vault.claim(id,evidence,1,end,proof(alice,evidence,1));
+        vault.claim(id,evidence,1,end,sig);
     }
 
     function testRemainingEscrowCanOnlyBeRefundedAfterWindow() public {
