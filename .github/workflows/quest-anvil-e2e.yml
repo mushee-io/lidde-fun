@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'contracts/**'
+      - 'foundry.toml'
       - 'script/QuestDevnet.s.sol'
       - '.github/workflows/quest-anvil-e2e.yml'
   workflow_dispatch:
