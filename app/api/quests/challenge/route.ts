@@ -8,7 +8,7 @@ export async function GET(request:NextRequest){
  try{
   const wallet=normalizedWallet(request.nextUrl.searchParams.get("wallet"));
   const action=request.nextUrl.searchParams.get("action")??"create-draft";
-  if(!["create-draft","register-campaign","verify-quest"].includes(action))throw new Error("Unknown challenge action.");
+  if(!["create-draft","register-campaign","verify-quest","growth-claim","growth-account","growth-referral","growth-watch"].includes(action))throw new Error("Unknown challenge action.");
   const origin=publicQuestOrigin();
   const expiry=new Date(Date.now()+5*60000);
   const message=["Lidde Fun - Quest Draft Authorization","Origin: "+origin,"Wallet: "+wallet,

@@ -14,7 +14,7 @@ export function publicQuestOrigin():string{
 export function checkOrigin(request:Request){
  if(request.headers.get("origin")!==publicQuestOrigin())throw new Error("Untrusted quest mutation origin.");
 }
-export async function authorizedQuest(creator:unknown, challenge:unknown, signature:unknown, action:"create-draft"|"register-campaign"|"verify-quest"){
+export async function authorizedQuest(creator:unknown, challenge:unknown, signature:unknown, action:"create-draft"|"register-campaign"|"verify-quest"|"growth-claim"|"growth-account"|"growth-referral"|"growth-watch"){
  const wallet=normalizedWallet(creator);
  const id=String(challenge??"");
  if(!isUuid(id)||typeof signature!=="string"||!/^0x[0-9a-fA-F]{130}$/.test(signature))
