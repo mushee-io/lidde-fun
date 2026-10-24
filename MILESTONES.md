@@ -5,7 +5,7 @@
 **Reference:** PurrFlow's information architecture (left-hand discovery panel, quest focus, account actions and bottom ticker). Implement original source, components, content and brand. Do not copy third-party proprietary assets or frontend code.
 
 **Status as of 24 October 2026:**
-- M01: initial frontend preview committed; source files are present. No Vercel deployment or passing CI build is claimed by this document.
+- M01: initial frontend preview committed; source files are present. GitHub Actions run #1 passed TypeScript and production build checks. No Vercel deployment is claimed by this document.
 - M02–M20: **planned, not built or deployed** unless individually verified by commits, test reports and real receipts.
 - The Lidde DEX repository currently has a planned isolated EVM test network. Its network registry is not configured; it must not be called a working public testnet.
 - The VERY live network is not to be relabelled as a sandbox. No mainnet trade, reward, wallet-signer, lending or leverage transaction is enabled by the first Lidde Fun commit.
@@ -46,7 +46,7 @@
 
 **Deliverables:** Working UI source, sample-token fixtures, local draft workflow, read-only wallet account display, responsive CSS.
 
-**Acceptance:** New contributor can install dependencies and run/build the app; browser interactions work; no network transaction or private-key flow is reachable. **Status: source pushed; build/deployment smoke checks still required.**
+**Acceptance:** New contributor can install dependencies and run/build the app; browser interactions work; no network transaction or private-key flow is reachable. **Status: source pushed; CI TypeScript and production build passed; visual browser testing and Vercel deployment remain pending.**
 
 ### Milestone 02 — UI design system, accessibility and engineering quality
 
