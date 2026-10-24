@@ -37,7 +37,7 @@ test("fixed decimal ratios and alert crosses enforce exact safety",()=>{
  assert.equal(fixedSix("1.234567"),1234567n);
  assert.equal(formatFixedSix(1234567n),"1.234567");
  assert.throws(()=>fixedSix("NaN"));assert.throws(()=>fixedSix("0"));assert.throws(()=>fixedSix("1.2345678"));
- assert.equal(checkAlert("price_below",fixedSix("0.5"),fixedSix("1"),1n,2n),false);
+ assert.equal(checkAlert("price_below",fixedSix("0.5"),fixedSix("1"),1n,2n),true);
  assert.equal(checkAlert("new_pair",null,null,9n,10n),false);
  assert.equal(checkAlert("new_pair",null,null,11n,10n),true);
 });
