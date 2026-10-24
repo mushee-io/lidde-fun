@@ -4,6 +4,7 @@ import { parseUnits, parseEventLogs, type Address, type Hash } from "viem";
 import { creatorAbi } from "@/lib/phase2/abis";
 import { loadManifest, verifiedWallet, verifyCreator, type SandboxManifest } from "@/lib/phase2/wallet";
 import { ShieldAlert, Rocket, ExternalLink } from "lucide-react";
+import Link from "next/link";
 export function TokenCreator() {
   const [manifest,setManifest]=useState<SandboxManifest|null>(null);
   const [reason,setReason]=useState("Checking the sandbox…");
@@ -51,7 +52,7 @@ export function TokenCreator() {
       {!enabled&&<p className="phase2-muted" role="status">{reason}</p>}
     </form>
     <section className="phase2-panel phase2-form"><h2>Deployment receipt</h2><p>Created token contracts and transaction hashes appear only after a real wallet-signed testnet transaction.</p>
-      {created&&<div className="phase2-result"><small>Deployed token address</small><code>{created}</code></div>}
+      {created&&<div className="phase2-result"><small>Deployed token address</small><code>{created}</code><Link className="phase2-text-link" href={"/pools/create?token="+created}>Seed the first test liquidity pool <ExternalLink size={14}/></Link></div>}
       {message&&<p role="status" className="phase2-success">{message}</p>}
       {error&&<p role="alert" className="phase2-error">{error}</p>}
       {transaction&&manifest&&<a className="phase2-text-link" target="_blank" rel="noreferrer" href={manifest.explorerUrl.replace(/\/$/,"")+"/tx/"+transaction}>Inspect sandbox receipt <ExternalLink size={15}/></a>}

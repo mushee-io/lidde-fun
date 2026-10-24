@@ -22,7 +22,9 @@ function quoteRatio(r0: string, r1: string, d0: number, d1: number): string | nu
   const x = BigInt(r0), y = BigInt(r1);
   if (!x || !y) return null;
   const fixed = y * (10n ** BigInt(d0)) * 1_000_000n / (x * (10n ** BigInt(d1)));
-  return (Number(fixed) / 1_000_000).toString();
+  const whole = fixed / 1_000_000n;
+  const fraction = (fixed % 1_000_000n).toString().padStart(6, "0").replace(/0+$/, "");
+  return whole.toString() + (fraction ? "." + fraction : "");
 }
 async function metadata(ctx: VerifiedContext, address: Address): Promise<ListedToken | null> {
   try {

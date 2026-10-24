@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { erc20Abi, formatUnits, getAddress, isAddress, parseUnits, type Address, type Hash } from "viem";
 import { ArrowRight, ExternalLink, RefreshCw, ShieldAlert, Wallet } from "lucide-react";
+import Link from "next/link";
 import { discovery, portfolio, type DiscoveryResponse, type PortfolioResponse } from "@/lib/phase2/browser-data";
 import { factoryAbi, pairAbi, routerAbi } from "@/lib/phase2/abis";
 import { loadManifest, minAfterSlippage, numericSlippage, verifiedWallet, type SandboxManifest } from "@/lib/phase2/wallet";
@@ -153,7 +154,7 @@ export function PortfolioManager() {
       <p className="phase2-muted">All balances are read at the same canonical indexed block. No USD values or synthetic investment returns are shown.</p></>}
     </section>
     <section className="phase2-panel phase2-form">
-      <h2>Manage pool liquidity</h2><p>Add ERC-20 pairs or withdraw your entire redeemable LP position. Initial pool launch is handled separately due to locked LP and initial-price risk.</p>
+      <h2>Manage pool liquidity</h2><p>Add ERC-20 pairs or withdraw your entire redeemable LP position. Initial pool launch requires an explicit price acknowledgement.</p><Link className="phase2-text-link" href="/pools/create">Launch a first test liquidity pool <ArrowRight size={15}/></Link>
       <label>Verified indexed pool<select value={pool} onChange={e=>{setPool(e.target.value);setPreview(null);}}>
         {directory?.pools.map(p=><option key={p.pair} value={p.pair}>{p.token0Symbol} / {p.token1Symbol} · {p.pair.slice(0,8)}</option>)}
       </select></label>
