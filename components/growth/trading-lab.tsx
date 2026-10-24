@@ -4,7 +4,8 @@ import { formatUnits, parseUnits } from "viem";
 import Link from "next/link";
 import { Activity, ArrowLeftRight, ArrowRight, ShieldAlert, LockKeyhole, FlaskConical, RefreshCcw } from "lucide-react";
 import { discovery, type DiscoveryResponse } from "@/lib/phase2/browser-data";
-import { simulateSpot } from "@/lib/growth/simulation";
+import { simulateSpot, type PoolQuote } from "@/lib/growth/simulation";
+type LabCalculation={ok:true;quantity:bigint;cap:bigint;quote:PoolQuote;warning:boolean;scenarios:{scale:number;output:string;impact:number|null}[]}|{ok:false;error:string};
 const short=(s:string)=>s.slice(0,8)+"…"+s.slice(-5);
 export function TradingLab(){
  const [markets,setMarkets]=useState<DiscoveryResponse|null>(null),[error,setError]=useState("Checking verified Lidde indexer…");
@@ -24,7 +25,7 @@ export function TradingLab(){
  const tokenOut=target?(inverse?target.token0Symbol:target.token1Symbol):"—";
  const precisionIn=target?(inverse?target.token1Decimals:target.token0Decimals):18;
  const precisionOut=target?(inverse?target.token0Decimals:target.token1Decimals):18;
- const calculation=useMemo(()=>{
+ const calculation=useMemo<LabCalculation|null>(()=>{
   if(!target)return null;
   try{
    if(!/^\d+(?:\.\d+)?$/.test(amount)||!/^\d+(?:\.\d+)?$/.test(budget))throw Error("Use positive token units.");
@@ -33,15 +34,14 @@ export function TradingLab(){
    const raw0=BigInt(target.reserve0),raw1=BigInt(target.reserve1);
    const slippageBps=Math.round(Number(slippage)*100);
    const quote=simulateSpot(inverse?raw1:raw0,inverse?raw0:raw1,quantity,30,slippageBps);
-   return {quantity,cap,quote,warning:quote.priceImpactBps>500,
+   return {ok:true,quantity,cap,quote,warning:quote.priceImpactBps>500,
     scenarios:[0.5,1,2].map(scale=>{
       const input=quantity*BigInt(Math.round(scale*1000))/1000n;
       try{const x=simulateSpot(inverse?raw1:raw0,inverse?raw0:raw1,input,30,slippageBps);return {scale,output:formatUnits(x.amountOut,precisionOut),impact:x.priceImpactBps};}
       catch{return {scale,output:"Unquotable",impact:null};}
     })};
-  }catch(e){return {error:e instanceof Error?e.message:"Cannot simulate pool."} as const;}
+  }catch(e){return {ok:false,error:e instanceof Error?e.message:"Cannot simulate pool."};}
  },[target,amount,budget,slippage,precisionIn,precisionOut,inverse]);
- const ok=calculation&&"quote" in calculation;
  return <div className="growth-workspace">
   <div className="growth-heading"><span><FlaskConical size={16}/> M17 · RESEARCH ONLY</span><h1>Advanced trading lab.</h1>
    <p>Analyze bounded, valueless AMM quotes before choosing to open the normal wallet-signed spot screen. The lab never signs transactions or operates automated bots.</p></div>
@@ -56,8 +56,8 @@ export function TradingLab(){
        <label>Maximum budget ({tokenIn})<input inputMode="decimal" value={budget} onChange={e=>setBudget(e.target.value)}/></label></div>
       <label>Slippage policy<select value={slippage} onChange={e=>setSlippage(e.target.value)}>
        <option value="0.1">0.1%</option><option value="0.5">0.5%</option><option value="1">1%</option><option value="3">3%</option><option value="5">5%</option></select></label>
-      {calculation&&"error" in calculation&&<div className="growth-error">{calculation.error}</div>}
-      {ok&&<><div className="growth-quote"><small>Estimated output (indexed reserves)</small>
+      {calculation?.ok===false&&<div className="growth-error">{calculation.error}</div>}
+      {calculation?.ok===true&&<><div className="growth-quote"><small>Estimated output (indexed reserves)</small>
         <strong>{formatUnits(calculation.quote.amountOut,precisionOut)} {tokenOut}</strong>
         <div><span>Minimum with chosen slippage</span><b>{formatUnits(calculation.quote.minimumOut,precisionOut)} {tokenOut}</b></div>
         <div><span>Price impact incl. swap fee</span><b>{(calculation.quote.priceImpactBps/100).toFixed(2)}%</b></div>
