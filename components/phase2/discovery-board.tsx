@@ -38,7 +38,7 @@ export function DiscoveryBoard() {
       <p className="phase2-muted">Unverified tokens; no listing endorsement. Swap counts can include bots. Price below expresses token 0 in token 1, not US dollars. Raw reserves have different decimals and are not comparable liquidity values.</p>
       <div className="phase2-table-scroll"><table className="phase2-table"><thead><tr><th>Pair</th><th>Token 0 / Token 1</th><th>Token 0 price</th><th>Raw indexed reserves</th><th>Swaps</th><th></th></tr></thead>
         <tbody>{pools.map(p => <tr key={p.pair}>
-          <td><strong>{p.token0Symbol} / {p.token1Symbol}</strong><small>{short(p.pair)}</small></td>
+          <td><strong>{p.token0Symbol} / {p.token1Symbol}</strong><small>{short(p.pair)}</small><Link className="phase2-mini-link" href={"/pairs/"+p.pair}>Observed price history →</Link></td>
           <td><span title={p.token0}>{tokens.get(p.token0.toLowerCase())?.name ?? short(p.token0)}</span> / <span title={p.token1}>{tokens.get(p.token1.toLowerCase())?.name ?? short(p.token1)}</span></td>
           <td>{p.price0In1 === null ? "—" : p.price0In1 + " " + p.token1Symbol}</td>
           <td><small>{formatUnits(BigInt(p.reserve0),p.token0Decimals)} / {formatUnits(BigInt(p.reserve1),p.token1Decimals)}</small></td>
