@@ -44,25 +44,16 @@ contract QuestDevnet {
         vm.startBroadcast(tester);
         SmokeToken token=new SmokeToken(wallet);
         QuestEscrow escrow=new QuestEscrow();
-        uint64 begin=uint64(block.timestamp+2);
+        uint64 begin=uint64(block.timestamp+30);
         uint64 end=uint64(block.timestamp+3600);
         uint256 id=escrow.createCampaign(address(token),signer,100 ether,1,begin,end);
         token.approve(address(escrow),100 ether);
         escrow.fund(id,100 ether);
         vm.stopBroadcast();
 
-        vm.warp(uint256(begin)+1);
-        bytes32 evidence=keccak256("confirmed-isolated-devnet-smoke-evidence");
-        bytes32 digest=escrow.hashClaim(id,wallet,evidence,1,end);
-        (uint8 v,bytes32 r,bytes32 s)=vm.sign(witness,digest);
-        bytes memory proof=abi.encodePacked(r,s,v);
+        // Claim is performed in a second transaction batch after the runner mines
+        // a later block on the disposable Anvil network. No time cheats affect a real RPC.
+        require(escrow.totalBudget(id)==100 ether,"INCORRECT_FUNDED_BUDGET");
 
-        vm.startBroadcast(tester);
-        escrow.claim(id,evidence,1,end,proof);
-        vm.stopBroadcast();
-
-        require(escrow.claimed(id,wallet),"NO_CLAIM");
-        require(token.balanceOf(wallet)==1000 ether,"MISSING_REWARD");
-        require(escrow.isClaimable(id,wallet)==false,"DOUBLE_CLAIM_AVAILABLE");
     }
 }
