@@ -9,6 +9,7 @@ interface Vm {
     function sign(uint256, bytes32) external returns (uint8,bytes32,bytes32);
     function startBroadcast(uint256) external;
     function stopBroadcast() external;
+    function warp(uint256) external;
 }
 
 contract SmokeToken {
