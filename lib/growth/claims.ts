@@ -1,6 +1,6 @@
 import "server-only";
 import { isHash, parseEventLogs, type Address, type Hex } from "viem";
-import { getVerifiedContext } from "@/lib/phase2/indexed";
+import { getVerifiedContext, type VerifiedContext } from "@/lib/phase2/indexed";
 import { deployedCampaign } from "@/lib/quests/vault";
 import { questRecord } from "@/lib/quests/records";
 import { vaultAbi } from "@/lib/quests/vault-abi";
@@ -39,7 +39,7 @@ export async function verifyClaimXP(campaignUuid:string,wallet:Address,hash:stri
   throw new Error("Claim is outside the canonical campaign period or reverted.");
  const logs=parseEventLogs({abi:vaultAbi,eventName:"RewardClaimed",logs:receipt.logs,strict:true})
    .filter(log=>same(log.address,chain.vault) &&
-      log.args.campaignId===BigInt(record.onchain_campaign_id)&&
+      log.args.campaignId===BigInt(record.onchain_campaign_id!)&&
       same(log.args.wallet,wallet)&&
       log.args.amount===chain.campaign.amountPerClaim);
  if(logs.length!==1)throw new Error("No unique RewardClaimed escrow event for this wallet.");
@@ -53,7 +53,7 @@ export type RawXP={
  transaction_hash:string;log_index:number;block_number:string;block_hash:string;
  event_at:string|Date;xp:number;
 };
-export async function canonicalScores(raw:RawXP[],maxBlock:bigint,client:ReturnType<typeof getVerifiedContext> extends Promise<infer T>? T["client"] : never){
+export async function canonicalScores(raw:RawXP[],maxBlock:bigint,client:VerifiedContext["client"]){
  const seen=new Map<string,string>();
  const chunks=raw.map(r=>({row:r,block:BigInt(r.block_number)}));
  if(chunks.some(x=>x.block>maxBlock))throw new Error("XP ledger references unindexed blocks.");
