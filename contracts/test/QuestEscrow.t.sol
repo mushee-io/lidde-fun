@@ -90,21 +90,24 @@ contract QuestEscrowTest {
     function testValidClaimThenSecondWalletCanClaim() public {
         started();
         bytes32 a = keccak256("alice-proof");
+        bytes memory aSig=proof(alice,a,1);
         vm.prank(alice);
-        vault.claim(id, a, 1, end, proof(alice, a, 1));
+        vault.claim(id,a,1,end,aSig);
         require(token.balanceOf(alice) == 10 ether && vault.claimed(id, alice));
         bytes32 b = keccak256("bob-proof");
+        bytes memory bSig=proof(bob,b,2);
         vm.prank(bob);
-        vault.claim(id, b, 2, end, proof(bob, b, 2));
+        vault.claim(id,b,2,end,bSig);
         require(token.balanceOf(bob) == 10 ether && vault.claimed(id, bob));
     }
 
     function testCannotClaimWithoutFullEscrowFunding() public {
         vm.warp(start + 1);
         bytes32 evidence=keccak256("underfunded");
+        bytes memory sig=proof(alice,evidence,1);
         vm.expectRevert(QuestEscrow.Underfunded.selector);
         vm.prank(alice);
-        vault.claim(id,evidence,1,end,proof(alice,evidence,1));
+        vault.claim(id,evidence,1,end,sig);
     }
 
     function testSignatureBoundToWallet() public {
@@ -130,20 +133,23 @@ contract QuestEscrowTest {
     function testEvidenceCannotBeSharedBetweenWallets() public {
         started();
         bytes32 evidence=keccak256("shared-tx");
+        bytes memory aSig=proof(alice,evidence,1);
+        bytes memory bSig=proof(bob,evidence,2);
         vm.prank(alice);
-        vault.claim(id,evidence,1,end,proof(alice,evidence,1));
+        vault.claim(id,evidence,1,end,aSig);
         vm.expectRevert(QuestEscrow.EvidenceUsed.selector);
         vm.prank(bob);
-        vault.claim(id,evidence,2,end,proof(bob,evidence,2));
+        vault.claim(id,evidence,2,end,bSig);
     }
 
     function testNoClaimAfterEnd() public {
         started();
         vm.warp(end + 1);
         bytes32 evidence=keccak256("too-late");
+        bytes memory sig=proof(alice,evidence,1);
         vm.expectRevert(QuestEscrow.NotActive.selector);
         vm.prank(alice);
-        vault.claim(id,evidence,1,end,proof(alice,evidence,1));
+        vault.claim(id,evidence,1,end,sig);
     }
 
     function testOnlyCreatorCanFundOrRefund() public {
@@ -162,9 +168,10 @@ contract QuestEscrowTest {
         vm.prank(creator);
         vault.pause(id,true);
         bytes32 evidence=keccak256("paused");
+        bytes memory sig=proof(alice,evidence,1);
         vm.expectRevert(QuestEscrow.NotActive.selector);
         vm.prank(alice);
-        vault.claim(id,evidence,1,end,proof(alice,evidence,1));
+        vault.claim(id,evidence,1,end,sig);
         vm.prank(creator);
         vault.rotateAttestor(id,address(0x1234));
         vm.prank(creator);
@@ -177,8 +184,9 @@ contract QuestEscrowTest {
     function testRemainingEscrowCanOnlyBeRefundedAfterWindow() public {
         started();
         bytes32 evidence=keccak256("one-claim");
+        bytes memory sig=proof(alice,evidence,1);
         vm.prank(alice);
-        vault.claim(id,evidence,1,end,proof(alice,evidence,1));
+        vault.claim(id,evidence,1,end,sig);
         vm.expectRevert(QuestEscrow.NotActive.selector);
         vm.prank(creator);
         vault.finalize(id);
@@ -195,8 +203,9 @@ contract QuestEscrowTest {
     function testRejectExpiredProof() public {
         started();
         bytes32 evidence=keccak256("expired");
+        bytes memory sig=proof(alice,evidence,1);
         vm.expectRevert(QuestEscrow.Expired.selector);
         vm.prank(alice);
-        vault.claim(id,evidence,1,start-1,proof(alice,evidence,1));
+        vault.claim(id,evidence,1,start-1,sig);
     }
 }
