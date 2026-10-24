@@ -6,7 +6,11 @@
 
 **Status as of 24 October 2026:**
 - M01: initial frontend preview committed; source files are present. GitHub Actions run #1 passed TypeScript and production build checks. No Vercel deployment is claimed by this document.
-- M02–M20: **planned, not built or deployed** unless individually verified by commits, test reports and real receipts.
+- M02: **initial frontend navigation, keyboard handling and responsive route pages implemented**, but browser accessibility and full component-system work remains.
+- M03: **read-only pinned testnet identity and contract-bytecode checks implemented**; the isolated network remains unconfigured, undeployed and unverified.
+- M04: **wallet account/chain event handling and a read-only connection panel implemented**; secure creator sessions, data controls and multiwallet support remain.
+- M05: **schema-gated canonical Lidde DEX indexer reader and verified pool viewer implemented**; standalone persistent market indexing and live sources remain unconfigured.
+- M06–M20: **planned, not built or deployed** unless individually verified by commits, test reports and real receipts.
 - The Lidde DEX repository currently has a planned isolated EVM test network. Its network registry is not configured; it must not be called a working public testnet.
 - The VERY live network is not to be relabelled as a sandbox. No mainnet trade, reward, wallet-signer, lending or leverage transaction is enabled by the first Lidde Fun commit.
 - The existing UI token numbers are fabricated placeholders marked as demo; local quest drafts are stored in localStorage, with no public campaign, token emission, identity verification or reward claim.
