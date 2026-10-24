@@ -4,7 +4,7 @@ on:
     paths:
       - 'contracts/**'
       - 'foundry.toml'
-      - 'script/QuestDevnet.s.sol'
+      - 'script/**'
       - '.github/workflows/quest-anvil-e2e.yml'
   workflow_dispatch:
 permissions:
@@ -35,20 +35,50 @@ jobs:
           ANVIL_ATTESTOR_TEST_KEY: "0x00000000000000000000000000000000000000000000000000000000000a11ce"
         run: |
           forge script script/QuestDevnet.s.sol:QuestDevnet --rpc-url http://127.0.0.1:8545 --broadcast -vv
-      - name: Verify actual broadcast receipt status without exposing signer keys
+      - name: Extract exact deployed QuestEscrow address from Foundry creation receipt
+        run: |
+          node --input-type=module <<'EOF'
+          import { readFileSync, appendFileSync } from 'node:fs';
+          const file='broadcast/QuestDevnet.s.sol/31337/run-latest.json';
+          const source=JSON.parse(readFileSync(file,'utf8'));
+          const vault=source.transactions.find(t=>t.contractName==='QuestEscrow'&&t.contractAddress);
+          if(!vault?.contractAddress)throw new Error('Real QuestEscrow creation receipt missing.');
+          appendFileSync(process.env.GITHUB_ENV,'ANVIL_QUEST_VAULT='+vault.contractAddress+'\n');
+          console.log('Confirmed isolated contract address: '+vault.contractAddress);
+          EOF
+      - name: Advance canonical disposable Anvil clock after full escrow funding
+        run: |
+          cast rpc evm_increaseTime 120 --rpc-url http://127.0.0.1:8545
+          cast rpc evm_mine --rpc-url http://127.0.0.1:8545
+      - name: Broadcast a separately signed real claim transaction
+        env:
+          ANVIL_DEVNET_PRIVATE_KEY: "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+          ANVIL_ATTESTOR_TEST_KEY: "0x00000000000000000000000000000000000000000000000000000000000a11ce"
+        run: |
+          forge script script/QuestDevnetClaim.s.sol:QuestDevnetClaim --rpc-url http://127.0.0.1:8545 --broadcast -vv
+      - name: Verify actual canonical on-chain claimed state and every transaction receipt
         run: |
           test -f broadcast/QuestDevnet.s.sol/31337/run-latest.json
+          test -f broadcast/QuestDevnetClaim.s.sol/31337/run-latest.json
           node --input-type=module <<'EOF'
           import { readFileSync } from 'node:fs';
-          const data=JSON.parse(readFileSync('broadcast/QuestDevnet.s.sol/31337/run-latest.json','utf8'));
-          const receipts=data.receipts??[];
-          if(receipts.length<5)throw new Error('Expected deployment, campaign, approval, escrow fund and claim transactions.');
+          const base='broadcast/';
+          const files=[
+            base+'QuestDevnet.s.sol/31337/run-latest.json',
+            base+'QuestDevnetClaim.s.sol/31337/run-latest.json'
+          ];
+          const receipts=files.flatMap(f=>JSON.parse(readFileSync(f,'utf8')).receipts??[]);
+          if(receipts.length<6)throw new Error('Expected campaign create, approval, escrow funding and claim transactions.');
           for(const receipt of receipts){
-            if(receipt.status!=='0x1' && receipt.status!=='1')throw new Error('EVM transaction did not succeed.');
+            if(!['0x1','1'].includes(String(receipt.status)))throw new Error('At least one EVM transaction reverted.');
           }
-          console.log('PASS: '+receipts.length+' real, valueless isolated Anvil receipts. Chain 31337 ephemeral; not publicly accessible.');
+          console.log('PASS: '+receipts.length+' real isolated Anvil receipts on disposable chain 31337.');
           console.log('Hashes: '+receipts.map(r=>r.transactionHash).join(', '));
           EOF
+          DEPLOYER=$(cast wallet address --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+          CLAIMED=$(cast call "$ANVIL_QUEST_VAULT" 'claimed(uint256,address)(bool)' 1 "$DEPLOYER" --rpc-url http://127.0.0.1:8545)
+          test "$CLAIMED" = "true"
+          echo "Verified: one real claim marked consumed in the sandbox vault"
       - name: Stop disposable chain
         if: always()
         run: |
