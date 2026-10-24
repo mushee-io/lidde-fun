@@ -6,7 +6,7 @@ export async function GET(){
   const {vault,config}=await verifiedVault();
   return NextResponse.json({
    status:"verified",chainId:config.chainId,vault,
-   attestor:claimSigner().address,realValueAllowed:false
+   attestor:claimSigner().address,vaultCodeHash:process.env.LIDDE_FUN_QUEST_VAULT_CODE_HASH,realValueAllowed:false
   },{headers:{"Cache-Control":"no-store"}});
  }catch(e){
   return NextResponse.json({status:"unavailable",reason:e instanceof Error?e.message:"Quest vault unavailable."},
