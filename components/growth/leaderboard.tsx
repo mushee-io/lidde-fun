@@ -35,7 +35,7 @@ export function Leaderboard(){
     body:JSON.stringify({op,wallet:current,nickname,public:publicOptin,...auth})});
    if(x.status==="deleted"){setProfile(null);setNickname("");setPublicOptin(false);setInfo("Off-chain profile and XP records deleted. Blockchain claims remain public.");}
    else{const p=(x as Account).profile;setProfile(p);setNickname(p?.nickname??"");setPublicOptin(p?.public??false);setInfo(op==="save"?"Profile preferences saved.":"Wallet profile loaded.");}
-   void load(window);
+   void load(period);
   }catch(e){setError(e instanceof Error?e.message:"Wallet profile operation failed.");}
   finally{setBusy(false);}
  }
@@ -62,7 +62,7 @@ export function Leaderboard(){
     body:JSON.stringify({wallet:current,id:campaign,transactionHash:claimHash,...auth})});
    setInfo(saved.status==="credited"?"Verified escrow claim credited with "+saved.xp+" off-chain XP at block "+saved.block:
     "This confirmed quest claim was already credited. No XP was issued again.");
-   void load(window);
+   void load(period);
   }catch(e){setError(e instanceof Error?e.message:"Claim proof not accepted.");}
   finally{setBusy(false);}
  }
@@ -71,7 +71,7 @@ export function Leaderboard(){
    <h1>Quest XP leaderboard.</h1><p>Earn 100 off-chain XP for each unique, independently confirmed QuestEscrow claim. This is not transferable, tradeable, a token or a promised airdrop.</p></div>
   <div className="growth-grid">
    <section className="growth-panel"><div className="growth-section-top"><h2><Trophy size={18}/> Transparent ranking</h2>
-    <button onClick={()=>void load(window)} disabled={busy}><RefreshCcw size={15}/> Refresh</button></div>
+    <button onClick={()=>void load(period)} disabled={busy}><RefreshCcw size={15}/> Refresh</button></div>
     <div className="growth-tabs">
      {(["week","month","season","all"] as const).map(x=><button key={x} className={x===period?"active":""} onClick={()=>setPeriod(x)}>{x==="all"?"All time":x}</button>)}</div>
     {reason&&<div className="growth-unavailable"><ShieldAlert size={20}/><div><strong>Rankings unavailable</strong><p>{reason}</p></div></div>}
