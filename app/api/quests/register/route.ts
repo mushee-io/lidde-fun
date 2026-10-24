@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkOrigin, authorizedDraft } from "@/lib/quests/auth";
+import { checkOrigin, authorizedQuest } from "@/lib/quests/auth";
 import { questRecord } from "@/lib/quests/records";
 import { questSql } from "@/lib/quests/db";
 import { claimSigner, deployedCampaign } from "@/lib/quests/vault";
@@ -14,7 +14,7 @@ export async function POST(request:NextRequest){
   const record=await questRecord(raw.id!);
   if(record.lifecycle!=="draft"||record.creator_address.toLowerCase()!==String(raw.creator).toLowerCase())
    throw new Error("Only the draft creator may register a new campaign.");
-  const wallet=await authorizedDraft(raw.creator,raw.challengeId,raw.signature);
+  const wallet=await authorizedQuest(raw.creator,raw.challengeId,raw.signature,"register-campaign");
   const chain=await deployedCampaign(BigInt(raw.onchainId));
   const info=chain.campaign;
   if(chain.config.chainId!==Number(record.chain_id)||

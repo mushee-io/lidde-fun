@@ -35,10 +35,10 @@ export function validateDraft(raw:unknown):Draft{
    const t=value as Record<string,unknown>;
    if(!["hold","swap","lp"].includes(String(t.kind))||!positive(t.minRaw))
     throw new Error("Task must have a valid type and minimum raw on-chain amount.");
-   if(t.kind==="hold"&&!address(t.token))throw new Error("Hold tasks require valid ERC-20 contracts.");
+   if((t.kind==="hold"||t.kind==="swap")&&!address(t.token))throw new Error("Hold and swap tasks require their target token address.");
    if((t.kind==="swap"||t.kind==="lp")&&!address(t.pair))
     throw new Error("Trading and LP tasks require verified pair contracts.");
-   return {kind:t.kind as RuleKind,minRaw:t.minRaw,...(t.kind==="hold"?{token:getAddress(t.token as Address)}:{pair:getAddress(t.pair as Address)})};
+   return {kind:t.kind as RuleKind,minRaw:t.minRaw,...((t.kind==="hold"||t.kind==="swap")?{token:getAddress(t.token as Address)}:{}),...((t.kind==="swap"||t.kind==="lp")?{pair:getAddress(t.pair as Address)}:{})};
  });
  if(BigInt(x.rewardEachRaw as string)*BigInt(x.maxClaims as number)>2n**192n-1n)
   throw new Error("Sandbox budget exceeds safety bounds.");

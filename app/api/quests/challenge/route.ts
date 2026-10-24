@@ -7,10 +7,12 @@ export const runtime="nodejs"; export const dynamic="force-dynamic";
 export async function GET(request:NextRequest){
  try{
   const wallet=normalizedWallet(request.nextUrl.searchParams.get("wallet"));
+  const action=request.nextUrl.searchParams.get("action")??"create-draft";
+  if(!["create-draft","register-campaign","verify-quest"].includes(action))throw new Error("Unknown challenge action.");
   const origin=publicQuestOrigin();
   const expiry=new Date(Date.now()+5*60000);
   const message=["Lidde Fun - Quest Draft Authorization","Origin: "+origin,"Wallet: "+wallet,
-   "Action: create-draft","Nonce: "+randomBytes(32).toString("hex"),
+   "Action: "+action,"Nonce: "+randomBytes(32).toString("hex"),
    "Expires: "+expiry.toISOString(),"No funds move and no token approvals are requested."].join("\n");
   const rows=await questSql().query(
    "INSERT INTO quest_auth_challenges(wallet_address,message,expires_at) VALUES($1,$2,$3) RETURNING id",

@@ -14,7 +14,7 @@ export function publicQuestOrigin():string{
 export function checkOrigin(request:Request){
  if(request.headers.get("origin")!==publicQuestOrigin())throw new Error("Untrusted quest mutation origin.");
 }
-export async function authorizedDraft(creator:unknown, challenge:unknown, signature:unknown){
+export async function authorizedQuest(creator:unknown, challenge:unknown, signature:unknown, action:"create-draft"|"register-campaign"|"verify-quest"){
  const wallet=normalizedWallet(creator);
  const id=String(challenge??"");
  if(!isUuid(id)||typeof signature!=="string"||!/^0x[0-9a-fA-F]{130}$/.test(signature))
@@ -23,7 +23,8 @@ export async function authorizedDraft(creator:unknown, challenge:unknown, signat
  const rows=await sql.query("SELECT wallet_address,message,expires_at,used_at FROM quest_auth_challenges WHERE id=$1 LIMIT 1",[id]);
  const row=rows[0];
  if(!row||row.used_at||new Date(String(row.expires_at)).getTime()<=Date.now()||
-  String(row.wallet_address).toLowerCase()!==wallet.toLowerCase())
+  String(row.wallet_address).toLowerCase()!==wallet.toLowerCase()||
+  !String(row.message).includes("Action: "+action))
   throw new Error("Wallet challenge is missing, expired or already used.");
  const valid=await verifyMessage({address:wallet,message:String(row.message),signature:signature as `0x${string}`});
  if(!valid)throw new Error("Wallet signature is not valid for this one-time challenge.");
@@ -31,3 +32,6 @@ export async function authorizedDraft(creator:unknown, challenge:unknown, signat
  if(used.length!==1)throw new Error("Challenge was already consumed.");
  return wallet;
 }
+
+export const authorizedDraft=(creator:unknown,challenge:unknown,signature:unknown)=>
+ authorizedQuest(creator,challenge,signature,"create-draft");
