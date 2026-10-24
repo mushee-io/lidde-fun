@@ -64,8 +64,9 @@ CREATE TABLE IF NOT EXISTS growth_alert_events (
  pair_address VARCHAR(42) NOT NULL,
  block_number NUMERIC(78,0) NOT NULL,
  block_hash VARCHAR(66) NOT NULL,
+ event_key VARCHAR(130) NOT NULL,
  observed_ratio_six NUMERIC(65,0),
  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
- UNIQUE(rule_id,block_hash)
+ UNIQUE(rule_id,event_key)
 );
 CREATE INDEX IF NOT EXISTS growth_alert_history ON growth_alert_events(rule_id,created_at DESC);
