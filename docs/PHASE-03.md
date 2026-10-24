@@ -6,7 +6,7 @@
 
 | Phase | Implemented code | External deployment still outstanding |
 | --- | --- | --- |
-| M10 Creator | Multi-step React quest builder, five-task maximum, wallet-signed one-time challenge, dedicated Neon schema, server authorization and draft persistence | Apply migration to a separate Neon project, set production HTTPS origin, browser acceptance testing |
+| M10 Creator | Multi-step React quest builder, five-task maximum, wallet-signed one-time challenge, dedicated Neon schema, server authorization and draft persistence | Dedicated Neon project and schema now provisioned; connect its database URL in app, set HTTPS origin, browser acceptance testing |
 | M11 Escrow | Non-upgradeable Solidity QuestEscrow, fixed funded budget, claims cap, escrow accounting, protected token movement, paused signing-key rotation, expiration refunds, EIP-712 digest separation; creator deployment/approval/funding wizard and on-chain event registration | Audit code and deploy pinned QuestEscrow on actual isolated chain |
 | M12 Verification | Canonical indexed block validation, ERC-20 holdings, Factory-registered LP positions, direct Router swap receipt + token-specific output verification, proof deduplication and source record persistence | Operate the canonical DEX indexer and test actual signed wallet eligibility on public sandbox |
 | M13 Claims | Off-chain wallet challenge, signed EIP-712 claim authorization bound to chain/campaign/wallet/evidence/nonce/expiry, one claim per wallet, evidence replay prevention, user-signed on-chain claim transaction and explorer receipt | Independently witness funded escrow payouts and anti-farming tests on a running sandbox |
@@ -87,7 +87,7 @@ Do not set publicly documented Anvil keys as a production or shared testnet atte
 
 1. **Network:** Deploy Lidde DEX Factory/Router/TestTokenFactory/Faucet and QuestEscrow on one persistent isolated test chain, verify genesis and all codehashes, publish an external explorer URL.
 2. **Indexer:** Start the Lidde DEX canonical indexer on that chain, apply indexer database migrations and verify block hash reorg handling and historic sync data.
-3. **Database:** Create dedicated Neon storage, apply additive 013 migration, set scoped credentials and cookie/origin/signature protections. This conversation has **not** applied a database migration to any user data.
+3. **Database:** Dedicated Neon project `lidde-fun-quests` (`flat-frost-39649070`, database `lidde_fun`) was created and additive migration 013 applied on 24 October 2026. Four tables are verified. Next: configure a narrowly scoped app database role/connection in deployment and review origin/signature/rate-limit protections. Existing `lidde-testnet` project was not changed.
 4. **Faucet:** Verify a wallet with no prior gas can receive valueless tokens without sending real currency.
 5. **Campaign:** Two *independent* wallets create a draft, escrow a funded campaign, trade, hold LP, verify all task proofs and claim. Capture actual chain transaction hashes and account balances.
 6. **Adversarial:** Replay the same signature, duplicate an onchain claim, reuse swap tx from another wallet, forge a pair, disconnect wallet, change chain ID, reorg proof block, rotate signer mid-claim and attempt early refund.
@@ -97,8 +97,9 @@ Do not set publicly documented Anvil keys as a production or shared testnet atte
 ## Current operational blockers
 
 - `mushee-io/lidde-dex/config/networks.testnet.json` and `config/deployments.testnet.json` are currently `not-configured`; the existing GitHub workflow verifies only an **ephemeral GitHub Actions Anvil chain**. That does not give external participants an available RPC after the job.
-- The initial attempt to create a Vercel project returned **HTTP 403 forbidden** for the connected Vercel team. This did not create a deployment.
-- No dedicated Neon database was created or mutated in this pass.
+- The attempt to create a Vercel project returned **HTTP 403 forbidden** for the connected Vercel team. This did not create a deployment.
+- The isolated Anvil Phase 3 broadcast rehearsal **passed** in [GitHub Actions run 40132541107](https://github.com/mushee-io/lidde-fun/actions/runs/40132541107): six genuine temporary-chain receipts and confirmed consumed claim state. It is not a persistent public network.
+- A new dedicated Neon database `lidde-fun-quests` was created, and its four new quest tables were added and verified; no existing Lidde DEX database was changed. The connection string has not been connected to a deployed app.
 - These limitations are intentional fail-closed states, not simulated success.
 
 ## Next operator action
