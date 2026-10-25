@@ -1,7 +1,7 @@
 "use client";
 import { isAddress, keccak256, getAddress, type Address, type Hex } from "viem";
 import { browserProvider, loadManifest, verifiedWallet } from "@/lib/phase2/wallet";
-export type QuestConfig={status:"verified";chainId:number;vault:Address;vaultCodeHash:Hex;attestor:Address;realValueAllowed:false};
+export type QuestConfig={status:"verified";chainId:number;vault:Address;vaultCodeHash:Hex;attestor:Address;realValueAllowed:false;writeEnabled:boolean};
 export type PublicQuest={
  id:string;title:string;description:string;tasks:{kind:"hold"|"swap"|"lp";token?:Address;pair?:Address;minRaw:string}[];
  token:Address;rewardEachRaw:string;chainId:number;vault:Address;onchainId:string;
@@ -37,7 +37,7 @@ export async function questVaultWallet(){
  const [manifest,config]=await Promise.all([
   loadManifest(),parseApi<QuestConfig>("/api/quests/config")
  ]);
- if(config.status!=="verified"||config.realValueAllowed!==false||
+ if(config.status!=="verified"||config.realValueAllowed!==false||!config.writeEnabled||
    config.chainId!==manifest.chainId||!isAddress(config.vault)||
    !/^0x[0-9a-fA-F]{64}$/.test(config.vaultCodeHash))
    throw new Error("Pinned sandbox vault is unavailable or on the wrong chain.");

@@ -3,6 +3,7 @@ import { randomBytes } from "node:crypto";
 import { normalizedWallet } from "@/lib/quests/rules";
 import { questSql } from "@/lib/quests/db";
 import { publicQuestOrigin } from "@/lib/quests/auth";
+import {enforceQuota} from "@/lib/ops/limits";
 export const runtime="nodejs"; export const dynamic="force-dynamic";
 export async function GET(request:NextRequest){
  try{
@@ -10,6 +11,8 @@ export async function GET(request:NextRequest){
   const action=request.nextUrl.searchParams.get("action")??"create-draft";
   if(!["create-draft","register-campaign","verify-quest","growth-claim","growth-account","growth-referral","growth-watch"].includes(action))throw new Error("Unknown challenge action.");
   const origin=publicQuestOrigin();
+  await enforceQuota("challenge-global","everyone",500);
+  await enforceQuota("challenge-wallet",wallet,5);
   const expiry=new Date(Date.now()+5*60000);
   const message=["Lidde Fun - Quest Draft Authorization","Origin: "+origin,"Wallet: "+wallet,
    "Action: "+action,"Nonce: "+randomBytes(32).toString("hex"),

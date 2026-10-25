@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { erc20Abi, getAddress, isAddress, keccak256, parseAbi } from "viem";
 import { probeNetwork } from "@/lib/infra/probe";
+import {writesEnabled} from "@/lib/ops/release";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const routerRead = parseAbi(["function factory() view returns(address)", "function WETH() view returns(address)"]);
@@ -38,6 +39,7 @@ export async function GET() {
       router: probe.config.router, routerCodeHash: probe.config.routerCodeHash,
       wrappedNative, tokenCreator: creator, tokenCreatorCodeHash: creator ? creatorHash : null,
       feeBps: 30, liveFundsAllowed: false,
+      writeEnabled:writesEnabled(process.env.LIDDE_FUN_WRITES_ENABLED,process.env.LIDDE_FUN_EMERGENCY_STOP),
       // Metadata such as balance precision must be read and checked directly on-chain.
     }, { headers: { "Cache-Control": "private, no-store" } });
   } catch {

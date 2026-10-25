@@ -6,7 +6,7 @@ export type SandboxManifest = {
   genesisHash: Hex; factory: Address; factoryCodeHash: Hex;
   router: Address; routerCodeHash: Hex; wrappedNative: Address;
   tokenCreator: Address | null; tokenCreatorCodeHash: Hex | null;
-  feeBps: number; liveFundsAllowed: false;
+  feeBps: number; liveFundsAllowed: false; writeEnabled:boolean;
 };
 const validHash = (value: string) => /^0x[0-9a-fA-F]{64}$/.test(value);
 export function isManifest(raw: unknown): raw is SandboxManifest {
@@ -14,7 +14,7 @@ export function isManifest(raw: unknown): raw is SandboxManifest {
   const x = raw as Record<string, unknown>;
   return x.status === "verified" && typeof x.chainId === "number" &&
     x.chainId > 1000 && x.chainId !== 4613 &&
-    x.liveFundsAllowed === false && x.feeBps === 30 &&
+    x.liveFundsAllowed === false && x.feeBps === 30 && typeof x.writeEnabled === "boolean" &&
     ["rpcUrl", "explorerUrl", "factory", "router", "wrappedNative"].every(k => typeof x[k] === "string") &&
     ["genesisHash", "factoryCodeHash", "routerCodeHash"].every(k => typeof x[k] === "string" && validHash(x[k] as string));
 }
@@ -43,6 +43,10 @@ export function browserProvider(): Ethereum {
   return provider;
 }
 export async function verifiedWallet(manifest: SandboxManifest) {
+  if(!manifest.writeEnabled)throw new Error("Operator has disabled wallet transactions.");
+  const current=await loadManifest();
+  if(!current.writeEnabled||current.chainId!==manifest.chainId||current.genesisHash.toLowerCase()!==manifest.genesisHash.toLowerCase())
+   throw new Error("Network or write policy changed; signing cancelled.");
   const provider = browserProvider();
   const accountResult = await provider.request({ method: "eth_requestAccounts" });
   const accountValue = Array.isArray(accountResult) ? accountResult[0] : null;

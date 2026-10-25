@@ -1,6 +1,7 @@
 import "server-only";
 import { verifyMessage } from "viem";
 import { questSql } from "@/lib/quests/db";
+import {enforceQuota} from "@/lib/ops/limits";
 import { normalizedWallet, isUuid } from "@/lib/quests/rules";
 export function publicQuestOrigin():string{
  const raw=process.env.QUEST_PUBLIC_ORIGIN;
@@ -28,6 +29,7 @@ export async function authorizedQuest(creator:unknown, challenge:unknown, signat
   throw new Error("Wallet challenge is missing, expired or already used.");
  const valid=await verifyMessage({address:wallet,message:String(row.message),signature:signature as `0x${string}`});
  if(!valid)throw new Error("Wallet signature is not valid for this one-time challenge.");
+ await enforceQuota("signed-action",wallet,40);
  const used=await sql.query("UPDATE quest_auth_challenges SET used_at=NOW() WHERE id=$1 AND used_at IS NULL AND expires_at>NOW() AND LOWER(wallet_address)=$2 RETURNING id",[id,wallet.toLowerCase()]);
  if(used.length!==1)throw new Error("Challenge was already consumed.");
  return wallet;
