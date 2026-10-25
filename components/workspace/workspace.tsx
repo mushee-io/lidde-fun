@@ -14,6 +14,7 @@ import {Leaderboard} from "@/components/growth/leaderboard";
 import {TokenDetail} from "@/components/workspace/token-detail";
 import {TraderProfile} from "@/components/workspace/trader-profile";
 import type {PublicQuest} from "@/lib/quests/browser";
+import {connectedAddress,signedQuestChallenge} from "@/lib/quests/browser";
 import type {ListedPool,ListedToken} from "@/lib/phase2/discovery";
 
 type WorkspaceView="quest"|"perp"|"tokens"|"leaderboard"|"token"|"trader";
@@ -134,10 +135,21 @@ export function TradingWorkspace({view="quest",market="BTC",address=""}:{view?:W
   if(addressPattern.test(search.trim())){router.push("/trader/"+search.trim());return;}
   if(find){setTab("Tokens");router.push("/discover");}
  };
- const pinTrader=(wallet:string)=>{
+ const pinTrader=async(wallet:string)=>{
   const next=watchWallets.some(a=>a.toLowerCase()===wallet.toLowerCase())?watchWallets.filter(x=>x.toLowerCase()!==wallet.toLowerCase()):[...watchWallets,wallet].slice(-100);
   setWatchWallets(next);try{localStorage.setItem("lf-trader-follows",JSON.stringify(next));}catch{}
-  setNotice("Follow preferences are saved in this browser only, not on-chain or to a public social profile.");
+  try{
+   const signer=await connectedAddress();
+   const auth=await signedQuestChallenge(signer,"growth-account");
+   const response=await fetch("/api/workspace/follows",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:signer,op:next.some(x=>x.toLowerCase()===wallet.toLowerCase())?"follow":"unfollow",followed:wallet,...auth})});
+   if(!response.ok)throw Error("Account sync unavailable.");
+   const synced=await response.json() as {follows:string[]};
+   setWatchWallets(synced.follows);
+   try{localStorage.setItem("lf-trader-follows",JSON.stringify(synced.follows));}catch{}
+   setNotice("Follow preferences verified and saved to your wallet-controlled Lidde Fun profile.");
+  }catch{
+   setNotice("Follow saved in this browser only. Wallet-profile sync requires signing and an enabled Lidde testnet service.");
+  }
  };
  const sidebarContent=()=>{
   if(tab==="Tokens")return <>
@@ -155,6 +167,14 @@ export function TradingWorkspace({view="quest",market="BTC",address=""}:{view?:W
    <div className="lf-subtabs">{(["Global","Friends"] as const).map(x=><button key={x} className={followersMode===x?"active":""} onClick={()=>setFollowersMode(x)}>{x}</button>)}</div>
    <div className="lf-sidebar-overflow">
     {globalEvents.map(e=><div className="lf-activity-row" key={e.txHash+e.pair}><span className="lf-token-avatar small"><Activity size={17}/></span><div><Link href={"/trader/"+e.wallet}><strong>{shrink(e.wallet)}</strong></Link><small><span className="lf-positive">{e.side==="swap"?"swapped":e.side}</span> {shrink(e.token)}</small></div><a title="View transaction" href={networkOK?"/markets":"#"} onClick={event=>{if(!networkOK)event.preventDefault();}}>{e.rawAmount} raw <ArrowUpRight size={13}/></a></div>)}
+    {followersMode==="Friends"&&<button className="lf-sync-follows" onClick={async()=>{
+     try{const wallet=await connectedAddress();const auth=await signedQuestChallenge(wallet,"growth-account");
+      const r=await fetch("/api/workspace/follows",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet,op:"list",...auth})});
+      if(!r.ok)throw Error("Signed account sync is not available.");
+      const json=await r.json() as {follows:string[]};setWatchWallets(json.follows);
+      localStorage.setItem("lf-trader-follows",JSON.stringify(json.follows));setNotice("Followed wallets synced from signed account.");
+     }catch(e){setNotice(e instanceof Error?e.message:"Follow sync unavailable.");}
+    }}>Sync signed follows</button>}
     {!globalEvents.length&&<div className="lf-sidebar-empty"><Bell size={25}/><b>{followersMode==="Friends"?"No followed-trader activity":"No verified trade events"}</b><p>{followersMode==="Friends"?"Follow a wallet from a trader profile; follows are private to this browser.":activity.reason||"The feed appears only when the canonical chain indexer is operational."}</p></div>}
    </div></>;
   if(tab==="Perp")return <>
@@ -182,7 +202,7 @@ export function TradingWorkspace({view="quest",market="BTC",address=""}:{view?:W
  return <div className="lf-app">
   <header className="lf-header">
    <div className="lf-brand-area"><button className="lf-mobile-toggle" aria-label="Toggle workspace menu" onClick={()=>setSidebarOpen(!sidebarOpen)}><Menu size={20}/></button>
-    <Link href="/" className="lf-brand"><span className="lf-logo-mark">✦</span><span>Lidde<span>Fun</span></span></Link></div>
+    <Link href="/" className="lf-brand"><span className="lf-logo-mark">✦</span><span>Lidde<span>Fun</span></span></Link><nav className="lf-desktop-shortcuts"><Link href="/launch">Launch</Link><Link href="/trade">Trade</Link></nav></div>
    <div className="lf-global-search"><Search size={18}/><input ref={inputRef} value={search} onFocus={()=>setSearchOpen(true)} onChange={e=>setSearch(e.target.value)}
      onKeyDown={handleSearchKey} placeholder="Search for tokens or traders..." aria-label="Search verified assets traders and quests" autoComplete="off"/>
     {search?<button title="Clear search" onClick={()=>setSearch("")}><X size={16}/></button>:<kbd>/</kbd>}

@@ -23,10 +23,11 @@ export async function POST(request:NextRequest){
    // Delete private referral + profile preferences and off-chain XP.
    // Public blockchain history is immutable and outside this deletion.
    await sql.query("DELETE FROM growth_referrals WHERE referee_wallet=$1 OR referrer_wallet=$1",[key]);
+   await sql.query("DELETE FROM growth_follows WHERE follower_wallet=$1 OR followed_wallet=$1",[key]);
    await sql.query("DELETE FROM growth_xp_events WHERE wallet_address=$1",[key]);
    await sql.query("DELETE FROM growth_watch_rules WHERE owner_wallet=$1",[key]);
    await sql.query("DELETE FROM growth_profiles WHERE wallet_address=$1",[key]);
-   return NextResponse.json({status:"deleted",note:"Off-chain profile, referrals, XP and watch alerts deleted. Public chain receipts remain immutable."});
+   return NextResponse.json({status:"deleted",note:"Off-chain profile, follows, referrals, XP and watch alerts deleted. Public chain receipts remain immutable."});
   }
   if(raw.op==="save"){
    const name=nickname(raw.nickname);
