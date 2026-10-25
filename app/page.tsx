@@ -1,2 +1,2 @@
-import { Terminal } from "@/components/terminal";
-export default function Home() { return <Terminal />; }
+import {TradingWorkspace} from "@/components/workspace/workspace";
+export default function Home(){return <TradingWorkspace view="quest"/>;}
