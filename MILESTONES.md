@@ -22,7 +22,10 @@
 - M15: **shareable quest pages, opt-in wallet referral attribution, QR onboarding and recorded eligible-claim conversion implemented**; social OAuth integrations, partner moderation and paid acquisition pipelines are not connected.
 - M16: **wallet-scoped watchlists, bounded canonical pair-price/new-pair evaluation, deduped observations, export and deletion implemented**; scheduled workers, push/email/Telegram delivery and reorg reconciliation of historical alerts remain outstanding.
 - M17: **read-only guarded trade lab with verified pool reserve simulation, slippage/budget controls and explicit spot handoff implemented**; copy trading, delegated accounts, automation and live funds deliberately disabled.
-- M18–M20: **planned or separately gated**; do not claim a live launch without independent proof.
+- M18: **pure integer math risk simulator and offline UI implemented**; no oracle, perpetual order execution, settlement, liquidation keeper, insurance or audited collateral contracts exist.
+- M19: **default-off signed write controls, emergency stop, shared atomic challenge quotas, application security headers, read-only runtime diagnostics and operating instructions implemented**; external audit, rotation drills, backups, privacy/legal review and real load testing remain.
+- M20: **readiness dashboard, fail-closed beta release policy, Chromium/API preview tests and release-preflight script implemented**; no persistent public sandbox, no Vercel deployment or independent external-wallet beta receipts yet.
+- Release gates G1–G5 remain blocked until independently verified chain infrastructure and operational acceptance evidence exist.
 - The Lidde DEX repository currently has a planned isolated EVM test network. Its network registry is not configured; it must not be called a working public testnet.
 - The VERY live network is not to be relabelled as a sandbox. No mainnet trade, reward, wallet-signer, lending or leverage transaction is enabled by the first Lidde Fun commit.
 - The existing UI token numbers are fabricated placeholders marked as demo; local quest drafts are stored in localStorage, with no public campaign, token emission, identity verification or reward claim.

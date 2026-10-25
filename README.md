@@ -61,6 +61,20 @@ Next.js App Router, React, TypeScript, Viem, Neon PostgreSQL, Lucide icons, cust
 
 No Phase 4 feature is labelled as an active production reward program or verified trading performance until a persistent sandbox and independent wallet receipts are available.
 
+## Phase 5 — Perps research and verified beta operations (M18–M20)
+
+- `/perps`: **non-trading**, bounded 1–10x long/short hypothetical margin and liquidation stress model. No perpetual contracts or real-value positions deployed.
+- `/beta`: operator-facing public-readiness inspection backed by actual RPC, indexer, vault, attestor and database checks where configured. It does not self-approve independent wallet, faucet or audit evidence.
+- `/api/ops/status`: privacy-preserving readiness checks, no actual signing keys or DB connection details returned.
+- `middleware.ts`: signed mutation emergency stop (off by default) with oversized payload protection.
+- `lib/phase2/wallet.ts`: rechecks operator write enablement before wallet signing.
+- `db/migrations/015_operations.sql`: applied to Neon `lidde-fun-quests`; shared atomic API request quotas.
+- `e2e/beta-smoke.spec.ts`: real Chromium and API preview tests run in GitHub Actions.
+- `scripts/release-preflight.mjs`: independent-evidence release policy produces an honest NO_GO.
+- [Phase 5 delivery & crosscheck](docs/PHASE-05.md) and [security guidance](SECURITY.md).
+
+**Public beta status: NOT RELEASED.** Lidde DEX has no verified public persistent network or contract deployments, external-wallet receipts are absent, and the Vercel team's project-creation API still returns 403 Forbidden.
+
 ## Roadmap
 
 See [MILESTONES.md](MILESTONES.md) for 20 milestone phases, sub-tasks, release gates and acceptance tests.
