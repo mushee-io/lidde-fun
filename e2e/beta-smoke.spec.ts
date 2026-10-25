@@ -13,14 +13,16 @@ test("perpetuals are offline simulation only and cannot trade",async({page})=>{
 });
 test("sandbox write APIs are fail closed before operator approval",async({request})=>{
  const wallet="0x1111111111111111111111111111111111111111";
- const [auth,manifest,status]=await Promise.all([
+ const [auth,manifest,status,cron]=await Promise.all([
   request.get("/api/quests/challenge?wallet="+wallet),
   request.get("/api/phase2/manifest"),
-  request.get("/api/ops/status")
+  request.get("/api/ops/status"),
+  request.get("/api/ops/maintenance")
  ]);
  expect(auth.status()).toBe(503);
  expect(manifest.status()).toBe(503);
  expect(status.ok()).toBeTruthy();
+ expect(cron.status()).toBe(401);
  const result=await status.json();
  expect(result.publicBeta).toBe(false);
  expect(result.writeEnabled).toBe(false);

@@ -14,7 +14,8 @@ This document separates source implementation from verified public deployment.
 - Default-off wallet/signing policy; LIDDE_FUN_WRITES_ENABLED must be exactly true. LIDDE_FUN_EMERGENCY_STOP=true overrides it.
 - Server middleware denies signed quest and growth API mutations if operator writes are off, plus oversized request guards.
 - Phase 2 wallet manifest and Phase 3 quest vault config include the operator signing flag; browser signing checks it again.
-- Shared Neon atomic rate limit table ops_rate_buckets applied and verified in dedicated lidde-fun-quests database. Challenge quotas 5/wallet/minute and 500 globally/minute; verified signed actions 40/wallet/minute.
+- Shared Neon atomic rate limit table ops_rate_buckets applied and verified in dedicated lidde-fun-quests database.
+- Daily protected Vercel cron source at /api/ops/maintenance, authenticated by CRON_SECRET, deletes expired nonce challenges and quota buckets only. It will not run until a Vercel deployment is authorized and CRON_SECRET is set. Challenge quotas 5/wallet/minute and 500 globally/minute; verified signed actions 40/wallet/minute.
 - Security response headers include anti-framing, nosniff, base/object policy, permission and referrer restrictions.
 - Read-only /api/ops/status and /beta report observed chain, indexer, escrow and DB checks. External evidence and audit are deliberately not self-approved.
 - SECURITY.md contains incident and disclosure guidance.

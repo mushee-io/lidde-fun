@@ -71,6 +71,7 @@ No Phase 4 feature is labelled as an active production reward program or verifie
 - `db/migrations/015_operations.sql`: applied to Neon `lidde-fun-quests`; shared atomic API request quotas.
 - `e2e/beta-smoke.spec.ts`: real Chromium and API preview tests run in GitHub Actions.
 - `scripts/release-preflight.mjs`: independent-evidence release policy produces an honest NO_GO.
+- `/api/ops/maintenance` + `vercel.json`: protected daily cleanup of expired signed challenges and rate-limit buckets (inactive until Vercel and CRON_SECRET are configured).
 - [Phase 5 delivery & crosscheck](docs/PHASE-05.md) and [security guidance](SECURITY.md).
 
 **Public beta status: NOT RELEASED.** Lidde DEX has no verified public persistent network or contract deployments, external-wallet receipts are absent, and the Vercel team's project-creation API still returns 403 Forbidden.
