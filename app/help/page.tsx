@@ -1,0 +1,3 @@
+import Link from "next/link";
+export const metadata={title:"Help — Lidde Fun"};
+export default function Page(){return <main className="lf-policy"><Link href="/">← Back to Lidde Fun</Link><h1>Help and testnet status</h1><p>Wallet connects are read-only until verified sandbox contracts and operator permissions are enabled. Token discovery, quests and XP require canonical chain indexer connections.</p><p>Never share a recovery phrase. Inspect the network readiness dashboard and contract deployments before signing any testnet transaction.</p><Link href="/beta">Open verified readiness report →</Link></main>;}

@@ -1,0 +1,3 @@
+import Link from "next/link";
+export const metadata={title:"Testnet terms — Lidde Fun"};
+export default function Page(){return <main className="lf-policy"><Link href="/">← Back to Lidde Fun</Link><h1>Experimental testnet terms</h1><p>Lidde Fun is presently an unaudited valueless sandbox product. No live perpetual trades, assured fiat prices, token investment recommendations or guaranteed rewards are offered.</p><p>Do not bridge actual valuable tokens to development networks or send funds based on screenshots. Real service terms and jurisdiction-specific legal approval remain required before a public launch.</p></main>;}
