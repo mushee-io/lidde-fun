@@ -1,0 +1,54 @@
+name: QuestEscrow deployment receipt rehearsal
+on:
+  push:
+    paths:
+      - "script/DeployQuestEscrow.s.sol"
+      - "scripts/verify-quest-deployment.mjs"
+      - ".github/workflows/quest-deploy-smoke.yml"
+      - "contracts/QuestEscrow.sol"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  receipt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Start ephemeral valueless EVM
+        run: |
+          anvil --chain-id 31337 --port 8545 --host 127.0.0.1 >/tmp/quest-anvil.log 2>&1 &
+          for i in $(seq 1 20); do
+            if cast chain-id --rpc-url http://127.0.0.1:8545 > /dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          test "$(cast chain-id --rpc-url http://127.0.0.1:8545)" = "31337"
+      - name: Broadcast valueless vault creation and preserve receipt
+        env:
+          LIDDE_FUN_TESTNET_CHAIN_ID: "31337"
+          LIDDE_FUN_DEPLOYER_PRIVATE_KEY: "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+        run: forge script script/DeployQuestEscrow.s.sol:DeployQuestEscrow --rpc-url http://127.0.0.1:8545 --broadcast -vv
+      - name: Verify actual on-chain code and first campaign ID
+        run: |
+          node --input-type=module <<'EOF'
+          import {readFileSync,appendFileSync} from "node:fs";
+          const run=JSON.parse(readFileSync("broadcast/DeployQuestEscrow.s.sol/31337/run-latest.json","utf8"));
+          const deployed=run.transactions.find(t=>t.contractName==="QuestEscrow"&&t.contractAddress);
+          if(!deployed)throw Error("No verified QuestEscrow creation transaction.");
+          if(!run.receipts?.some(r=>r.transactionHash?.toLowerCase()===deployed.hash?.toLowerCase() && ["0x1","1"].includes(String(r.status))))
+           throw Error("Missing successful deployment receipt.");
+          appendFileSync(process.env.GITHUB_ENV,"LIDDE_FUN_QUEST_VAULT_ADDRESS="+deployed.contractAddress+"\n");
+          console.log("QuestEscrow receipt:",deployed.hash);
+          EOF
+      - name: Read runtime fingerprint, genesis and EIP712 domain
+        env:
+          LIDDE_FUN_TESTNET_CHAIN_ID: "31337"
+          LIDDE_FUN_RPC_URL: "http://127.0.0.1:8545"
+        run: node scripts/verify-quest-deployment.mjs
