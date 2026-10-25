@@ -4,7 +4,21 @@ A VERY ecosystem trading-discovery and quests terminal, inspired by the **layout
 
 ## Status
 
-**Phase 1–4 source implementation committed; genuine public sandbox remains unconfigured.** The original home terminal still includes clearly labelled preview fixtures, while route-specific Phase 2/3/4 modules fail closed when the verified chain, indexer and escrow are unavailable. No real-money trading, rewards, perps, automated execution or verified public beta is active. The Phase 3/4 SQL tables have been created on the separate Neon `lidde-fun-quests` database, but this is not a live application deployment.
+**Phases 1–5 and the new screenshot-referenced internal trading workspace are committed; genuine public sandbox remains unconfigured.** Homepage, quests, token discovery and sidebar feeds no longer substitute illustrative prices, token market caps or fake funded quests for canonical source data. The existing backend integrations fail closed when the verified chain, indexer and escrow are unavailable. No real-money trading, rewards, perps, automated execution or verified public beta is active. The Phase 3/4 SQL tables have been created on the separate Neon `lidde-fun-quests` database, but this is not a live application deployment.
+
+## Trading workspace redesign — screenshot reference
+
+The original dark internal Lidde Fun layout has been expanded into a global premium trading workspace informed by ten supplied screenshots. The Lidde Fun name and original launchpad, LP, quests, portfolio and XP APIs remain preserved.
+
+- `/`, `/quest`, `/quests`: featured verified quests, progress, actions and reusable left tabs.
+- `/discover`, `/token/[address]`: canonical token and pair metadata, trending/new/active categories, actual reserve history and no invented valuations.
+- `/perp/[market]`: research-only three-column perpetual screen with working Buy/Sell, amounts, research leverage, TP/SL inputs and no fake prices or actual settlement.
+- `/leaderboard`, `/trader/[address]`: opt-in XP ranks, public wallet evidence and locally remembered follows. Signed follow sync is available only when write services are operational.
+- Verified global activity API checks actual indexed pair Swap logs against transaction receipts; ticker uses indexed reserve quotes or displays disconnected.
+- Responsive desktop/sidebar/split-panel/mobile layout, keyboard search, unchanged noncustodial launch and quest signing flows.
+- [Full implementation and crosscheck](docs/TERMINAL-REDESIGN.md).
+
+**Current launch classification:** user interface and APIs implemented, but **not a live public financial platform or audited leverage market**. The dedicated Neon follow migration has been applied. The Vercel permissions and persistent sandbox deployment remain blockers.
 
 ## Development
 
