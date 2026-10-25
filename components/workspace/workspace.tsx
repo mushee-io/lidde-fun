@@ -11,10 +11,12 @@ import {WalletConnect} from "@/components/wallet-connect";
 import {QuestBoard} from "@/components/workspace/quest-board";
 import {PerpTerminal} from "@/components/workspace/perp-terminal";
 import {Leaderboard} from "@/components/growth/leaderboard";
+import {TokenDetail} from "@/components/workspace/token-detail";
+import {TraderProfile} from "@/components/workspace/trader-profile";
 import type {PublicQuest} from "@/lib/quests/browser";
 import type {ListedPool,ListedToken} from "@/lib/phase2/discovery";
 
-type WorkspaceView="quest"|"perp"|"tokens"|"leaderboard";
+type WorkspaceView="quest"|"perp"|"tokens"|"leaderboard"|"token"|"trader";
 type SidebarTab="Alerts"|"Tokens"|"Perp"|"Leaderboard"|"Quest";
 type TokenCategory="Crypto"|"Trending"|"New"|"Active"|"Graduated";
 type PerpCategory="All"|"Crypto"|"Meme"|"Stock";
@@ -29,9 +31,9 @@ const tokenCategories:TokenCategory[]=["Crypto","Trending","New","Active","Gradu
 const shrink=(address:string)=>address.slice(0,6)+"…"+address.slice(-4);
 const addressPattern=/^0x[0-9a-fA-F]{40}$/;
 const money=(n:string)=>{try{const x=BigInt(n);return x.toLocaleString("en-GB");}catch{return n;}};
-const initialTab:Record<WorkspaceView,SidebarTab>={quest:"Quest",perp:"Perp",tokens:"Tokens",leaderboard:"Leaderboard"};
+const initialTab:Record<WorkspaceView,SidebarTab>={quest:"Quest",perp:"Perp",tokens:"Tokens",leaderboard:"Leaderboard",token:"Tokens",trader:"Leaderboard"};
 
-export function TradingWorkspace({view="quest",market="BTC"}:{view?:WorkspaceView;market?:string}){
+export function TradingWorkspace({view="quest",market="BTC",address=""}:{view?:WorkspaceView;market?:string;address?:string}){
  const router=useRouter();
  const [tab,setTab]=useState<SidebarTab>(initialTab[view]);
  const [category,setCategory]=useState<TokenCategory>("Trending");
@@ -205,7 +207,7 @@ export function TradingWorkspace({view="quest",market="BTC"}:{view?:WorkspaceVie
    {split!=="none"&&<aside className={"lf-secondary-panel "+(split==="bottom"?"bottom":"right")}><div className="lf-secondary-head"><span><Activity size={15}/> Indexed activity</span><button aria-label="Close split panel" onClick={()=>updateSplit("none")}><X size={16}/></button></div>
     <div className="lf-sidebar-overflow">{activity.events.length?activity.events.slice(0,12).map(x=><div className="lf-secondary-event" key={x.txHash}>{shrink(x.wallet)} · {x.side} · {x.rawAmount} raw</div>):<div className="lf-sidebar-empty"><Bell size={20}/><p>{activity.reason||"No canonical activity events available."}</p></div>}</div></aside>}
    <main className="lf-main">
-    {view==="quest"?<QuestBoard quests={questData.campaigns} loading={questData.status==="loading"} error={questData.reason??""} selected={selectedQuest} onSelect={setSelectedQuest}/>:
+    {view==="token"?<TokenDetail address={address} tokens={tokens} pools={pools} reason={discovery.reason}/>:view==="trader"?<TraderProfile address={address} rankings={board.rankings} onFollow={pinTrader} followed={watchWallets.some(x=>x.toLowerCase()===address.toLowerCase())}/>:view==="quest"?<QuestBoard quests={questData.campaigns} loading={questData.status==="loading"} error={questData.reason??""} selected={selectedQuest} onSelect={setSelectedQuest}/>:
      view==="perp"?<PerpTerminal market={market}/>:
      view==="leaderboard"?<div className="lf-leaderboard-view"><div className="lf-page-heading"><div><h1><Trophy size={27}/> Leaderboard</h1><p>On-chain verified quest XP. Trading profit and unverified return calculations are not displayed.</p></div><Link className="lf-primary-action" href="/community"><Users size={17}/> Community</Link></div><Leaderboard/></div>:
      <div className="lf-token-view"><div className="lf-page-heading"><div><h1><Coins size={27}/> Token discovery</h1><p>Canonical tokens and reserve ratios on the isolated Lidde sandbox. No invented market caps or fiat values.</p></div><Link className="lf-primary-action" href="/launch"><Plus size={18}/> Create token</Link></div>
