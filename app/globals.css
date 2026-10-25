@@ -480,3 +480,10 @@ a{color:inherit;text-decoration:none}.app{padding-bottom:46px;min-height:100vh}.
 .growth-safety-matrix span{font-size:11px;color:#bdacd0;text-align:right}
 @media(max-width:1040px){.growth-grid{grid-template-columns:1fr}.growth-panel{padding:20px}}
 @media(max-width:630px){.growth-workspace{padding:30px 0}.growth-panel{padding:15px}.growth-score-head,.growth-score-row{grid-template-columns:1fr 65px 50px;padding:12px 10px}.growth-two,.growth-metrics{grid-template-columns:1fr}.growth-community-quests article,.growth-watch-rule{align-items:flex-start;flex-direction:column}.growth-scenarios>div{grid-template-columns:65px 1fr 75px}.growth-section-top{align-items:flex-start;flex-direction:column}}
+
+.beta-check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.beta-check{display:flex;gap:12px;align-items:flex-start;background:#211b2b;border:1px solid #3a304c;border-radius:12px;padding:17px}
+.beta-check strong{font-size:13px}
+.beta-check p{font-size:11px;line-height:1.7;color:#b4a7c3}
+.beta-check svg{flex-shrink:0}
+@media(max-width:700px){.beta-check-grid{grid-template-columns:1fr}}

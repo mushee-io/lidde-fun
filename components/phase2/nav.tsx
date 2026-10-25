@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, ChartNoAxesCombined, Coins, FlaskConical, Layers, Rocket, Wallet, Droplets, Trophy, Share2, Bell, FlaskRound } from "lucide-react";
+import { ArrowLeft, ChartNoAxesCombined, Coins, FlaskConical, Layers, Rocket, Wallet, Droplets, Trophy, Share2, Bell, FlaskRound, ShieldCheck, Activity } from "lucide-react";
 const tabs = [
   { href: "/discover", name: "Discover", icon: ChartNoAxesCombined },
   { href: "/quests", name: "Quests", icon: Trophy },
@@ -7,6 +7,8 @@ const tabs = [
   { href: "/community", name: "Community", icon: Share2 },
   { href: "/alerts", name: "Alerts", icon: Bell },
   { href: "/lab", name: "Trading lab", icon: FlaskRound },
+  { href: "/perps", name: "Perps research", icon: Activity },
+  { href: "/beta", name: "Beta readiness", icon: ShieldCheck },
   { href: "/trade", name: "Spot", icon: Coins },
   { href: "/launch", name: "Token creator", icon: Rocket },
   { href: "/pools/create", name: "First pool", icon: Droplets },
