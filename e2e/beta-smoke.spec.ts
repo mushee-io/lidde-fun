@@ -31,6 +31,6 @@ test("sandbox write APIs are fail closed before operator approval",async({reques
 });
 test("available browsing pages do not claim funded quests on an unconfigured network",async({page})=>{
  await page.goto("/quests");
- await expect(page.getByText("Discover. Complete. Claim.")).toBeVisible();
- await expect(page.getByText("Reward infrastructure is not live yet")).toBeVisible({timeout:20000});
+ await expect(page.getByRole("heading",{name:"Quests"})).toBeVisible();
+ await expect(page.getByText("No verified on-chain quests")).toBeVisible({timeout:20000});
 });
