@@ -5,7 +5,7 @@ import {writesEnabled} from "./lib/ops/release";
  * GET challenge is also blocked during emergency incidents.
  * Wallet writes are separately guarded by the verified manifest.
  */
-export function middleware(request:NextRequest){
+export function proxy(request:NextRequest){
  const {pathname}=request.nextUrl;
  const isMutation=request.method==="POST"&&(pathname.startsWith("/api/quests/")||pathname.startsWith("/api/growth/"));
  const isChallenge=pathname==="/api/quests/challenge";

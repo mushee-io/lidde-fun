@@ -20,6 +20,7 @@ test("sandbox write APIs are fail closed before operator approval",async({reques
   request.get("/api/ops/maintenance")
  ]);
  expect(auth.status()).toBe(503);
+ expect((await auth.json()).reason).toBe("Sandbox write operations are not enabled by the operator.");
  expect(manifest.status()).toBe(503);
  expect(status.ok()).toBeTruthy();
  expect(cron.status()).toBe(401);
